@@ -7,6 +7,7 @@ import { StatsStore } from './core';
 import type { GameState } from './core';
 import { provideI18n } from './core/i18n/provide-i18n';
 import { GAME_WON_HANDLERS } from './features/play/game-events';
+import { providePwa } from './core/pwa/provide-pwa';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,5 +27,6 @@ export const appConfig: ApplicationConfig = {
         return (game: GameState) => stats.recordWin(game);
       },
     },
+    providePwa(),
   ],
 };

@@ -20,5 +20,6 @@
   "difficulty": { "easy": "Facile", "medium": "Moyen", "hard": "Difficile", "insane": "Extrême" },
   "toast": { "dismiss": "Fermer" },
   "dialog": { "close": "Fermer" },
-  "common": { "loading": "Chargement…" }
+  "common": { "loading": "Chargement…" },
+  "update": { "available": "Une nouvelle version est disponible.", "reload": "Recharger" }
 }
