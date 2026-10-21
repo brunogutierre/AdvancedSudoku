@@ -128,3 +128,15 @@ a {
     border: 1px solid CanvasText;
   }
 }
+
+// Page container shared by routed pages.
+.page {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--sp-7) var(--page-pad) var(--sp-8);
+}
+
+.page-title {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-semibold);
+}
