@@ -36,10 +36,14 @@
     "resume": "Reanudar",
     "newGame": "Nueva partida"
   },
-  "won": {
-    "title": "Resuelto.",
-    "time": "Resuelto en {{ time }}",
-    "newGame": "Nueva partida",
-    "home": "Inicio"
+  "live": {
+    "placed": "{{ digit }} en la fila {{ row }}, columna {{ col }}",
+    "erased": "Fila {{ row }}, columna {{ col }} borrada",
+    "conflict": "Conflicto: el {{ digit }} de la fila {{ row }}, columna {{ col }} ya está en su fila, columna o caja",
+    "row": "Fila {{ n }} completa",
+    "col": "Columna {{ n }} completa",
+    "box": "Caja {{ n }} completa",
+    "digit": "Todos los {{ digit }} colocados",
+    "won": "Sudoku resuelto"
   }
 }

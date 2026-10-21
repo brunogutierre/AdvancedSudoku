@@ -14,11 +14,13 @@ import { Confetti } from './confetti';
     [mistakes]="2"
     [hintsUsed]="1"
     [personalBest]="best()"
+    [dailyStreak]="streak()"
     (newGame)="again.set(true)"
   />`,
 })
 class Host {
   readonly best = signal(false);
+  readonly streak = signal<number | null>(null);
   readonly again = signal(false);
 }
 
@@ -58,8 +60,12 @@ describe('Completion', () => {
     expect(fixture.componentInstance.again()).toBe(true);
     expect(root.querySelector('.actions a')?.getAttribute('href')).toBe('/');
 
+    expect(root.querySelector('.daily')).toBeNull();
     fixture.componentInstance.best.set(true);
+    fixture.componentInstance.streak.set(4);
     fixture.detectChanges();
+    expect(root.querySelector('.daily .eyebrow')?.textContent).toBe('Daily challenge');
+    expect(root.querySelector('.streak')?.textContent).toContain('4-day streak');
     expect(root.querySelector('.badge')?.textContent).toContain('New best');
   });
 });

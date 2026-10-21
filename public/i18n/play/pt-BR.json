@@ -36,10 +36,14 @@
     "resume": "Continuar",
     "newGame": "Novo jogo"
   },
-  "won": {
-    "title": "Resolvido.",
-    "time": "Resolvido em {{ time }}",
-    "newGame": "Novo jogo",
-    "home": "Início"
+  "live": {
+    "placed": "{{ digit }} na linha {{ row }}, coluna {{ col }}",
+    "erased": "Linha {{ row }}, coluna {{ col }} apagada",
+    "conflict": "Conflito: o {{ digit }} na linha {{ row }}, coluna {{ col }} já está na linha, coluna ou caixa",
+    "row": "Linha {{ n }} completa",
+    "col": "Coluna {{ n }} completa",
+    "box": "Caixa {{ n }} completa",
+    "digit": "Todos os {{ digit }} colocados",
+    "won": "Quebra-cabeça resolvido"
   }
 }

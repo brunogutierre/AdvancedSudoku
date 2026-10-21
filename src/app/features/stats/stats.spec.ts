@@ -98,12 +98,12 @@ describe('Stats', () => {
     const streak = Array.from(root.querySelectorAll('.streak dd')).map((d) => d.textContent);
     expect(streak).toEqual(['1', '1']);
 
-    expect(root.querySelectorAll('app-time-chart rect').length).toBe(3);
+    expect(root.querySelectorAll('app-time-chart .bar').length).toBe(3);
 
     filter('Hard');
     expect(root.querySelector('[aria-pressed=true]')?.textContent?.trim()).toBe('Hard');
     expect(kpis()[0]).toEqual(['Games played', '1']);
-    expect(root.querySelectorAll('app-time-chart rect').length).toBe(1);
+    expect(root.querySelectorAll('app-time-chart .bar').length).toBe(1);
 
     filter('Insane');
     expect(root.querySelector('app-time-chart')).toBeNull();

@@ -38,6 +38,8 @@ export class Completion {
   readonly hintsUsed = input(0);
   /** Set by the stats feature when this time beats the best for the difficulty. */
   readonly personalBest = input(false);
+  /** Current streak when this was a daily puzzle. */
+  readonly dailyStreak = input<number | null>(null);
   /** Lets the board's win wave play first. */
   readonly delayMs = input(WIN_WAVE_MS);
   readonly newGame = output<void>();

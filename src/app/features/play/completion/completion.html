@@ -4,6 +4,16 @@
       ><app-icon name="trophy" [size]="16" />{{ 'completion.newBest' | transloco }}</span
     >
   }
+  @if (dailyStreak(); as streak) {
+    <span class="daily">
+      <span class="eyebrow">{{ 'completion.daily' | transloco }}</span>
+      <span class="streak tnum"
+        ><app-icon name="flame" [size]="16" />{{
+          'completion.streak' | transloco: { count: streak }
+        }}</span
+      >
+    </span>
+  }
   <h2 id="completion-title" class="display headline">{{ 'completion.title' | transloco }}</h2>
   <p class="display time tnum" [attr.aria-label]="('completion.time' | transloco) + ' ' + time()">
     {{ time() }}
