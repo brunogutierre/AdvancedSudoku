@@ -101,6 +101,13 @@
   view-transition-name: nav-indicator;
 }
 
+// Narrow Play screen: the back link takes the wordmark's room (the logo and label stay).
+@media (width < 600px) {
+  :host(.on-play) :is(.word, .accent) {
+    display: none;
+  }
+}
+
 @media (width >= 600px) {
   .bar {
     height: 64px;
