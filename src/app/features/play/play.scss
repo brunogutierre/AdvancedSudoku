@@ -28,6 +28,14 @@
 
 .stage {
   position: relative;
+
+  app-board {
+    transition: opacity var(--dur-2) var(--ease-out);
+  }
+
+  &.dimmed app-board {
+    opacity: 0.85;
+  }
 }
 
 .skeleton {

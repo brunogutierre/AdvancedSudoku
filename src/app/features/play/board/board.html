@@ -6,6 +6,9 @@
   [attr.aria-label]="label()"
   [class.concealed]="concealed()"
   [class.locked]="locked()"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="cancelPress()"
+  (pointercancel)="cancelPress()"
 >
   @for (row of rows(); track $index; let r = $index) {
     <div class="row" role="row" [attr.aria-rowindex]="r + 1">
@@ -38,6 +41,8 @@
           (click)="cellSelect.emit(cell.index)"
           (keydown.enter)="cellSelect.emit(cell.index)"
           (focus)="onFocus(cell)"
+          (pointerdown)="onPointerDown($event, cell.index)"
+          (contextmenu)="onContextMenu($event, cell.index)"
         >
           @if (!concealed()) {
             @if (cell.value) {

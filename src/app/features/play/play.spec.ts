@@ -210,6 +210,42 @@ describe('Play', () => {
     expect(store.status()).toBe('playing');
   });
 
+  it('opens the radial picker with Space, right-click, and fills candidates with A', async () => {
+    const { harness, root, store, press } = await open('/play?difficulty=medium');
+    store.select(2);
+    await press({ key: ' ', code: 'Space' });
+    harness.detectChanges();
+    expect(root.querySelector('app-radial-picker')).not.toBeNull();
+    expect(root.querySelector('.stage')?.classList).toContain('dimmed');
+
+    const picker = root.querySelector('app-radial-picker')!;
+    picker.querySelector<HTMLButtonElement>('[data-digit="4"]')!.click();
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+    expect(store.cells()[2].value).toBe(4);
+    expect(root.querySelector('app-radial-picker')).toBeNull();
+    expect((document.activeElement as HTMLElement).dataset['index']).toBe('2');
+
+    root
+      .querySelector('[data-index="3"]')!
+      .dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+    harness.detectChanges();
+    expect(store.selected()).toBe(3);
+    expect(root.querySelector('app-radial-picker')).not.toBeNull();
+
+    await press({ code: 'KeyA', key: 'a' });
+    expect(store.cells()[3].notes).not.toBe(0);
+  });
+
+  it('keeps Space for focused buttons outside the board', async () => {
+    const { harness, root, store, press } = await open('/play?difficulty=medium');
+    store.select(2);
+    const key = root.querySelector<HTMLButtonElement>('app-number-pad button')!;
+    await press({ key: ' ', code: 'Space' }, key);
+    harness.detectChanges();
+    expect(root.querySelector('app-radial-picker')).toBeNull();
+  });
+
   it('pauses the game when leaving the screen', async () => {
     const { harness, store } = await open('/play?difficulty=medium');
     await harness.navigateByUrl('/');

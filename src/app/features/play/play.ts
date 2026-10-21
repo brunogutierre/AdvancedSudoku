@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DOCUMENT,
   DestroyRef,
   OnInit,
   computed,
@@ -26,6 +27,7 @@ import { navigate } from './board/board-nav';
 import { GAME_WON_HANDLERS } from './game-events';
 import { NumberPad } from './number-pad/number-pad';
 import { PlayToolbar } from './play-toolbar/play-toolbar';
+import { RadialAnchor, RadialPicker } from './radial-picker/radial-picker';
 import { PlayCommand, resolveKey } from './play-keys';
 
 const DIFFICULTIES: readonly Difficulty[] = ['easy', 'medium', 'hard', 'insane'];
@@ -53,6 +55,7 @@ const OWN_KEYS = '[role="menu"], input, textarea, select, dialog';
     Board,
     NumberPad,
     PlayToolbar,
+    RadialPicker,
   ],
   providers: [provideTranslocoScope('play')],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,6 +71,7 @@ export class Play implements OnInit {
   protected readonly settings = inject(SettingsStore);
   private readonly engine = inject(EngineClient);
   private readonly router = inject(Router);
+  private readonly document = inject(DOCUMENT);
   private readonly route = inject(ActivatedRoute);
   private readonly wonHandlers = inject(GAME_WON_HANDLERS, { optional: true }) ?? [];
   private readonly board = viewChild(Board);
@@ -78,6 +82,7 @@ export class Play implements OnInit {
   protected readonly playing = computed(() => this.store.status() === 'playing');
   protected readonly finalTime = computed(() => formatDuration(this.store.elapsedMs()));
   protected readonly boxes = Array.from({ length: 9 }, (_, i) => i);
+  protected readonly radial = signal<RadialAnchor | null>(null);
   private request = 0;
 
   constructor() {
@@ -132,6 +137,22 @@ export class Play implements OnInit {
     }
   }
 
+  protected openRadial(cell: number, armed = false): void {
+    const anchor = this.playing() ? this.board()?.anchorOf(cell, armed) : null;
+    if (anchor) {
+      this.store.select(cell);
+      this.radial.set(anchor);
+    }
+  }
+
+  protected closeRadial(): void {
+    const anchor = this.radial();
+    this.radial.set(null);
+    if (anchor) {
+      this.board()?.focusCell(anchor.cell);
+    }
+  }
+
   protected onKeydown(event: KeyboardEvent): void {
     const target = event.target as Element | null;
     if (event.defaultPrevented || this.loading() || target?.closest?.(OWN_KEYS)) {
@@ -148,7 +169,9 @@ export class Play implements OnInit {
       }
       return;
     }
-    if (!this.playing()) {
+    // Space keeps activating focused buttons; it opens the picker only from the board or page.
+    const fromBoard = !target || target === this.document.body || !!target.closest?.('app-board');
+    if (!this.playing() || (command.type === 'radial' && !fromBoard)) {
       return;
     }
     event.preventDefault();
@@ -167,6 +190,12 @@ export class Play implements OnInit {
       }
       case 'digit':
         return this.store.input(command.digit, command.note ? { note: true } : {});
+      case 'radial': {
+        const selected = this.store.selected();
+        return selected === null ? undefined : this.openRadial(selected);
+      }
+      case 'candidates':
+        return this.store.autoCandidates();
       default:
         return this.onAction(command.type);
     }

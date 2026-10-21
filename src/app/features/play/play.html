@@ -11,7 +11,7 @@
       (togglePause)="togglePause()"
     />
 
-    <div class="stage">
+    <div class="stage" [class.dimmed]="radial()">
       @if (loading()) {
         <div class="skeleton" role="status">
           <div class="frame" aria-hidden="true">
@@ -42,6 +42,7 @@
           [concealed]="paused()"
           [locked]="!playing()"
           (cellSelect)="store.select($event)"
+          (cellMenu)="openRadial($event.cell, $event.armed)"
         />
         @if (paused()) {
           <div class="overlay">
@@ -89,4 +90,9 @@
     <!-- Hint panel slot: the hints PR renders its card (desktop) / bottom sheet (mobile) here. -->
     <div class="assist"></div>
   </section>
+  @if (radial(); as anchor) {
+    @if (playing()) {
+      <app-radial-picker [anchor]="anchor" (closed)="closeRadial()" />
+    }
+  }
 </div>
