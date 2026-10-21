@@ -1,0 +1,92 @@
+<div class="play">
+  <section class="game" [attr.aria-busy]="loading()">
+    <h1 class="visually-hidden">{{ 'play.title' | transloco }}</h1>
+    <app-play-toolbar
+      [difficulty]="store.difficulty()"
+      [elapsedMs]="store.elapsedMs()"
+      [mistakes]="store.mistakes()"
+      [showMistakes]="settings.mistakeMode() === 'solution'"
+      [paused]="paused()"
+      [canPause]="!loading() && (playing() || paused())"
+      (togglePause)="togglePause()"
+    />
+
+    <div class="stage">
+      @if (loading()) {
+        <div class="skeleton" role="status">
+          <div class="frame" aria-hidden="true">
+            @for (box of boxes; track box) {
+              <app-skeleton
+                height="100%"
+                radius="var(--r-xs)"
+                [style.animation-delay.ms]="box * 60"
+              />
+            }
+          </div>
+          <p class="caption">{{ 'play.generating' | transloco }}</p>
+        </div>
+      } @else if (failed()) {
+        <div class="message" role="alert">
+          <p>{{ 'play.error' | transloco }}</p>
+          <button app-button type="button" (click)="newGame()">
+            {{ 'play.retry' | transloco }}
+          </button>
+        </div>
+      } @else {
+        <app-board
+          [cells]="store.cells()"
+          [label]="
+            'play.board'
+              | transloco: { difficulty: ('difficulty.' + store.difficulty() | transloco) }
+          "
+          [concealed]="paused()"
+          [locked]="!playing()"
+          (cellSelect)="store.select($event)"
+        />
+        @if (paused()) {
+          <div class="overlay">
+            <button type="button" class="resume" (click)="store.resume()">
+              <span class="disc"><app-icon name="play" [size]="32" /></span>
+              <span>{{ 'play.pause.resume' | transloco }}</span>
+            </button>
+            <button app-button variant="ghost" type="button" (click)="newGame()">
+              {{ 'play.pause.newGame' | transloco }}
+            </button>
+          </div>
+        }
+        <!-- Minimal win state; the completion PR replaces it (see GAME_WON_HANDLERS). -->
+        @if (store.isWon()) {
+          <div class="overlay won" role="status">
+            <h2 class="display">{{ 'play.won.title' | transloco }}</h2>
+            <p class="tnum">{{ 'play.won.time' | transloco: { time: finalTime() } }}</p>
+            <div class="row">
+              <button app-button type="button" (click)="newGame()">
+                {{ 'play.won.newGame' | transloco }}
+              </button>
+              <a app-button variant="secondary" routerLink="/">{{ 'play.won.home' | transloco }}</a>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </section>
+
+  <section class="controls">
+    <app-action-bar
+      [label]="'play.actions.label' | transloco"
+      [canUndo]="store.canUndo()"
+      [canRedo]="store.canRedo()"
+      [canEdit]="playing()"
+      [notesMode]="store.notesMode()"
+      (action)="onAction($event)"
+    />
+    <app-number-pad
+      [label]="'play.pad.label' | transloco"
+      [counts]="store.digitCounts()"
+      [notesMode]="store.notesMode()"
+      (digit)="playing() && store.input($event)"
+    />
+    <!-- Hint panel slot: the hints PR renders its card (desktop) / bottom sheet (mobile) here. -->
+    <div class="assist"></div>
+  </section>
+</div>

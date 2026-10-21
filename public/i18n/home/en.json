@@ -8,5 +8,14 @@
   "newGame": "New game",
   "newGameLabel": "New {{ difficulty }} game",
   "noBest": "No best time yet",
-  "daily": { "eyebrow": "Daily challenge", "cta": "Play today" }
+  "daily": {
+    "eyebrow": "Daily challenge",
+    "cta": "Play today"
+  },
+  "continue": {
+    "eyebrow": "Continue",
+    "cells": "{{ filled }} of 81 cells",
+    "cta": "Continue",
+    "label": "Continue your {{ difficulty }} game"
+  }
 }

@@ -1,8 +1,21 @@
 {
-  "greeting": { "morning": "Bonjour.", "afternoon": "Bon après-midi.", "evening": "Bonsoir." },
+  "greeting": {
+    "morning": "Bonjour.",
+    "afternoon": "Bon après-midi.",
+    "evening": "Bonsoir."
+  },
   "subtitle": "Une grille, de la logique pure. Choisissez votre défi.",
   "newGame": "Nouvelle partie",
   "newGameLabel": "Nouvelle partie {{ difficulty }}",
   "noBest": "Pas encore de meilleur temps",
-  "daily": { "eyebrow": "Défi quotidien", "cta": "Jouer aujourd’hui" }
+  "daily": {
+    "eyebrow": "Défi quotidien",
+    "cta": "Jouer aujourd’hui"
+  },
+  "continue": {
+    "eyebrow": "Reprendre",
+    "cells": "{{ filled }} cases sur 81",
+    "cta": "Reprendre",
+    "label": "Reprendre votre partie {{ difficulty }}"
+  }
 }

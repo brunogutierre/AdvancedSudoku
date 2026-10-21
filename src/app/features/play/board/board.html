@@ -1,0 +1,57 @@
+<div
+  class="board"
+  role="grid"
+  aria-rowcount="9"
+  aria-colcount="9"
+  [attr.aria-label]="label()"
+  [class.concealed]="concealed()"
+  [class.locked]="locked()"
+>
+  @for (row of rows(); track $index; let r = $index) {
+    <div class="row" role="row" [attr.aria-rowindex]="r + 1">
+      @for (vm of row; track vm.cell.index) {
+        @let cell = vm.cell;
+        <div
+          role="gridcell"
+          class="cell"
+          [attr.data-index]="cell.index"
+          [attr.aria-colindex]="cell.col + 1"
+          [attr.tabindex]="cell.index === tabStop() ? 0 : -1"
+          [attr.aria-selected]="cell.selected"
+          [attr.aria-readonly]="cell.given || null"
+          [attr.aria-invalid]="cell.conflict || null"
+          [attr.aria-label]="
+            concealed()
+              ? null
+              : (vm.labelKey | transloco: vm.labelParams) +
+                (cell.conflict ? ', ' + ('play.cell.conflict' | transloco) : '')
+          "
+          [class.given]="cell.given"
+          [class.peer]="cell.isPeer"
+          [class.same]="cell.sameDigit"
+          [class.selected]="cell.selected"
+          [class.conflict]="cell.conflict"
+          [class.box-end-col]="cell.col === 2 || cell.col === 5"
+          [class.box-end-row]="cell.row === 2 || cell.row === 5"
+          [class.last-col]="cell.col === 8"
+          [class.last-row]="cell.row === 8"
+          (click)="cellSelect.emit(cell.index)"
+          (keydown.enter)="cellSelect.emit(cell.index)"
+          (focus)="onFocus(cell)"
+        >
+          @if (!concealed()) {
+            @if (cell.value) {
+              <span class="digit" aria-hidden="true">{{ cell.value }}</span>
+            } @else if (cell.notes) {
+              <span class="notes" aria-hidden="true">
+                @for (slot of vm.slots; track $index) {
+                  <span [class.hit]="slot < 0">{{ slot ? (slot < 0 ? -slot : slot) : '' }}</span>
+                }
+              </span>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

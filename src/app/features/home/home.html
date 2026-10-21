@@ -1,11 +1,19 @@
-<div class="page grid">
+<div class="page grid" [class.has-continue]="saved()">
   <header class="hero">
     <p class="eyebrow">{{ today() }}</p>
     <h1 class="display">{{ greetingKey | transloco }}</h1>
     <p class="sub">{{ 'home.subtitle' | transloco }}</p>
   </header>
 
-  <!-- The "Continue" card (7 columns) joins here once saved games exist. -->
+  @if (saved(); as game) {
+    <app-continue-card
+      class="continue"
+      [difficulty]="game.difficulty"
+      [elapsedMs]="game.elapsedMs"
+      [filled]="game.filled"
+      [progress]="game.progress"
+    />
+  }
 
   <section class="daily" aria-labelledby="daily-title">
     <p class="eyebrow" id="daily-title">{{ 'home.daily.eyebrow' | transloco }}</p>

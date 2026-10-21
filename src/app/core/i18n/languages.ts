@@ -1,6 +1,8 @@
-export const LANGS = ['en', 'pt-BR', 'es', 'fr'] as const;
+import type { Lang } from '../settings/settings.model';
 
-export type Lang = (typeof LANGS)[number];
+export type { Lang };
+
+export const LANGS: readonly Lang[] = ['en', 'pt-BR', 'es', 'fr'];
 
 export const DEFAULT_LANG: Lang = 'en';
 
@@ -13,19 +15,3 @@ export const LANG_LABELS: Readonly<
   es: { name: 'Español', short: 'ES' },
   fr: { name: 'Français', short: 'FR' },
 };
-
-export function isLang(value: unknown): value is Lang {
-  return typeof value === 'string' && (LANGS as readonly string[]).includes(value);
-}
-
-/** Maps a BCP 47 tag (`pt-PT`, `fr-CA`, `es`) to a supported language, or null. */
-export function matchLang(tag: string | null | undefined): Lang | null {
-  if (!tag) {
-    return null;
-  }
-  const base = tag.toLowerCase().split('-')[0];
-  if (base === 'pt') {
-    return 'pt-BR';
-  }
-  return LANGS.find((lang) => lang === base) ?? null;
-}

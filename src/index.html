@@ -13,11 +13,14 @@
     <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0e0f13" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <!-- Apply the persisted theme before first paint (key must match ThemeService). -->
+    <!-- Apply persisted appearance settings before first paint (shape: SettingsStore). -->
     <script>
       try {
-        var theme = localStorage.getItem('advsudoku:v1:theme');
-        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+        var s = JSON.parse(localStorage.getItem('advsudoku:v1:settings') || '{}');
+        var root = document.documentElement;
+        if (s.theme === 'light' || s.theme === 'dark') root.dataset.theme = s.theme;
+        if (s.reducedMotion === 'on') root.dataset.motion = 'reduced';
+        if (s.reducedMotion === 'off') root.dataset.motion = 'full';
       } catch (e) {}
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />

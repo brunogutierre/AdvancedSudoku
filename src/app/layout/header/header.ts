@@ -28,6 +28,7 @@ const THEME_ICONS = { system: 'contrast', light: 'sun', dark: 'moon' } as const;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.scrolled]': 'scrolled()',
+    '[class.on-play]': 'onPlay()',
     '(window:scroll)': 'onScroll()',
   },
   templateUrl: './header.html',

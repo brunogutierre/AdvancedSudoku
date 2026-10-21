@@ -1,8 +1,21 @@
 {
-  "greeting": { "morning": "Bom dia.", "afternoon": "Boa tarde.", "evening": "Boa noite." },
+  "greeting": {
+    "morning": "Bom dia.",
+    "afternoon": "Boa tarde.",
+    "evening": "Boa noite."
+  },
   "subtitle": "Um quebra-cabeça, pura lógica. Escolha seu desafio.",
   "newGame": "Novo jogo",
   "newGameLabel": "Novo jogo {{ difficulty }}",
   "noBest": "Sem melhor tempo ainda",
-  "daily": { "eyebrow": "Desafio diário", "cta": "Jogar hoje" }
+  "daily": {
+    "eyebrow": "Desafio diário",
+    "cta": "Jogar hoje"
+  },
+  "continue": {
+    "eyebrow": "Continuar",
+    "cells": "{{ filled }} de 81 casas",
+    "cta": "Continuar",
+    "label": "Continuar seu jogo {{ difficulty }}"
+  }
 }

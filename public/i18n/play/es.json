@@ -1,1 +1,45 @@
-{ "title": "Jugar" }
+{
+  "title": "Jugar",
+  "generating": "Generando un sudoku único…",
+  "error": "No se pudo crear el sudoku.",
+  "retry": "Reintentar",
+  "board": "Tablero de sudoku, {{ difficulty }}",
+  "cell": {
+    "given": "Fila {{ row }}, columna {{ col }}, caja {{ box }}, fijo {{ value }}",
+    "filled": "Fila {{ row }}, columna {{ col }}, caja {{ box }}, {{ value }}",
+    "empty": "Fila {{ row }}, columna {{ col }}, caja {{ box }}, vacía",
+    "notes": "Fila {{ row }}, columna {{ col }}, caja {{ box }}, vacía, notas {{ notes }}",
+    "conflict": "conflicto"
+  },
+  "pad": {
+    "label": "Teclado numérico",
+    "digit": "{{ digit }}, quedan {{ count }}",
+    "done": "{{ digit }}, completo"
+  },
+  "actions": {
+    "label": "Acciones del juego",
+    "undo": "Deshacer",
+    "redo": "Rehacer",
+    "erase": "Borrar",
+    "notes": "Notas",
+    "on": "Activo",
+    "hint": "Pista"
+  },
+  "toolbar": {
+    "time": "Tiempo",
+    "mistakes": "Errores: {{ count }}",
+    "pause": "Pausar",
+    "resume": "Reanudar",
+    "paused": "En pausa"
+  },
+  "pause": {
+    "resume": "Reanudar",
+    "newGame": "Nueva partida"
+  },
+  "won": {
+    "title": "Resuelto.",
+    "time": "Resuelto en {{ time }}",
+    "newGame": "Nueva partida",
+    "home": "Inicio"
+  }
+}
