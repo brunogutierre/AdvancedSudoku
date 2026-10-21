@@ -1,1 +1,52 @@
-{ "title": "Réglages" }
+{
+  "title": "Réglages",
+  "sections": {
+    "gameplay": "Jeu",
+    "assistance": "Aide",
+    "feedback": "Retours",
+    "appearance": "Apparence",
+    "language": "Langue"
+  },
+  "mistakeMode": {
+    "label": "Erreurs",
+    "help": "Signaler les conflits, vérifier avec la solution ou ne rien afficher.",
+    "conflicts": "Conflits",
+    "solution": "Solution",
+    "off": "Désactivé"
+  },
+  "autoCandidates": {
+    "label": "Notes automatiques en Facile",
+    "help": "Commencer les parties faciles avec tous les candidats notés."
+  },
+  "highlightPeers": {
+    "label": "Surligner ligne, colonne et bloc",
+    "help": "Teinter les cases qui partagent une unité avec la sélection."
+  },
+  "highlightSameDigit": {
+    "label": "Surligner le même chiffre",
+    "help": "Teinter les cases et notes du chiffre sélectionné."
+  },
+  "sound": {
+    "label": "Son",
+    "help": "Sons doux synthétisés pour les coups et les victoires."
+  },
+  "haptics": {
+    "label": "Vibrations",
+    "help": "Courtes vibrations sur les appareils compatibles."
+  },
+  "reducedMotion": {
+    "label": "Réduire les animations",
+    "help": "Remplacer les animations par de simples fondus.",
+    "system": "Système",
+    "on": "Activé",
+    "off": "Désactivé"
+  },
+  "theme": {
+    "label": "Thème"
+  },
+  "language": {
+    "label": "Langue",
+    "help": "Chaque langue est affichée dans sa propre langue."
+  },
+  "reset": "Rétablir les valeurs par défaut"
+}

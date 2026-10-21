@@ -2,7 +2,7 @@ import type { Digit } from '../../engine';
 
 export type PlayCommand =
   | { readonly type: 'digit'; readonly digit: Digit; readonly note: boolean }
-  | { readonly type: 'erase' | 'notes' | 'undo' | 'redo' | 'hint' }
+  | { readonly type: 'erase' | 'notes' | 'undo' | 'redo' | 'hint' | 'radial' | 'candidates' }
   /** `toggle: false` only pauses (Esc); P toggles pause/resume. */
   | { readonly type: 'pause'; readonly toggle: boolean }
   | { readonly type: 'move'; readonly key: string; readonly ctrl: boolean };
@@ -11,8 +11,8 @@ const MOVE_KEYS = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'H
 
 /**
  * Maps a keydown to a game command. Digits use `event.code` so Shift+digit (a note) works on
- * every keyboard layout; letters use codes too (N notes, H hint, P pause, Ctrl+Z / Ctrl+Y /
- * Ctrl+Shift+Z).
+ * every keyboard layout; letters use codes too (N notes, H hint, P pause, A fill candidates,
+ * Ctrl+Z / Ctrl+Y / Ctrl+Shift+Z). Space opens the radial picker on the selected cell.
  */
 export function resolveKey(event: KeyboardEvent): PlayCommand | null {
   if (event.altKey) {
@@ -39,6 +39,8 @@ export function resolveKey(event: KeyboardEvent): PlayCommand | null {
       return { type: 'erase' };
     case 'Escape':
       return { type: 'pause', toggle: false };
+    case ' ':
+      return { type: 'radial' };
   }
   switch (event.code) {
     case 'KeyN':
@@ -47,6 +49,8 @@ export function resolveKey(event: KeyboardEvent): PlayCommand | null {
       return { type: 'hint' };
     case 'KeyP':
       return { type: 'pause', toggle: true };
+    case 'KeyA':
+      return { type: 'candidates' };
     default:
       return null;
   }

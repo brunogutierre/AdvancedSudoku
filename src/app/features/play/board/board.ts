@@ -11,7 +11,19 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { ALL_DIGITS, digitsOf, hasDigit } from '../../../engine';
 import type { CellIndex, UnitRef } from '../../../engine';
 import type { CellView } from '../../../core';
+import type { RadialAnchor } from '../radial-picker/radial-picker';
+import { MotionKind, animateCells } from './board-motion';
 import type { BoardOverlay } from '../hints/hint-view';
+
+/** Hold time that turns a press into a long-press (opens the radial picker). */
+export const LONG_PRESS_MS = 350;
+const MOVE_TOLERANCE_PX = 10;
+
+export interface CellMenuRequest {
+  readonly cell: CellIndex;
+  /** True for a long-press that is still held (release-to-commit). */
+  readonly armed: boolean;
+}
 
 interface NoteSlot {
   /** 0 = empty slot. */
@@ -55,8 +67,12 @@ export class Board {
   /** Highlights of the open hint. */
   readonly overlay = input<BoardOverlay | null>(null);
   readonly cellSelect = output<CellIndex>();
+  /** Long-press or right-click on a cell: open the radial picker there. */
+  readonly cellMenu = output<CellMenuRequest>();
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private press: { timer: ReturnType<typeof setTimeout>; x: number; y: number } | null = null;
+  private longPressed = false;
 
   private readonly selectedValue = computed(
     () => this.cells().find((cell) => cell.selected)?.value ?? 0,
@@ -79,7 +95,73 @@ export class Board {
 
   /** Moves DOM focus to a cell (keyboard navigation keeps focus and selection together). */
   focusCell(index: CellIndex): void {
-    this.host.nativeElement.querySelector<HTMLElement>(`[data-index="${index}"]`)?.focus();
+    this.cellElement(index)?.focus();
+  }
+
+  /** Plays a micro-animation on cells (callers check reduced motion). */
+  animate(kind: MotionKind, cells: readonly CellIndex[]): void {
+    animateCells((cell) => this.cellElement(cell), kind, cells);
+  }
+
+  private cellElement(index: CellIndex): HTMLElement | null {
+    return this.host.nativeElement.querySelector<HTMLElement>(`[data-index="${index}"]`);
+  }
+
+  /** Viewport geometry of a cell, to anchor the radial picker on it. */
+  anchorOf(index: CellIndex, armed: boolean): RadialAnchor | null {
+    const el = this.cellElement(index);
+    if (!el) {
+      return null;
+    }
+    const rect = el.getBoundingClientRect();
+    return {
+      cell: index,
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+      size: rect.width,
+      armed,
+    };
+  }
+
+  protected onPointerDown(event: PointerEvent, cell: CellIndex): void {
+    this.cancelPress();
+    this.longPressed = false;
+    if (event.pointerType === 'mouse' && event.button !== 0) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      this.press = null;
+      this.longPressed = true;
+      this.cellMenu.emit({ cell, armed: true });
+    }, LONG_PRESS_MS);
+    this.press = { timer, x: event.clientX, y: event.clientY };
+  }
+
+  protected onPointerMove(event: PointerEvent): void {
+    if (
+      this.press &&
+      Math.hypot(event.clientX - this.press.x, event.clientY - this.press.y) > MOVE_TOLERANCE_PX
+    ) {
+      this.cancelPress();
+    }
+  }
+
+  protected cancelPress(): void {
+    if (this.press) {
+      clearTimeout(this.press.timer);
+      this.press = null;
+    }
+  }
+
+  /** Right-click, or the context menu some phones fire after our own long-press. */
+  protected onContextMenu(event: MouseEvent, cell: CellIndex): void {
+    event.preventDefault();
+    this.cancelPress();
+    if (this.longPressed) {
+      this.longPressed = false;
+      return;
+    }
+    this.cellMenu.emit({ cell, armed: false });
   }
 
   /** True when DOM focus is on one of the cells. */

@@ -1,0 +1,34 @@
+<dialog #dialog class="sheet" aria-labelledby="completion-title" (cancel)="onCancel($event)">
+  @if (personalBest()) {
+    <span class="badge"
+      ><app-icon name="trophy" [size]="16" />{{ 'completion.newBest' | transloco }}</span
+    >
+  }
+  <h2 id="completion-title" class="display headline">{{ 'completion.title' | transloco }}</h2>
+  <p class="display time tnum" [attr.aria-label]="('completion.time' | transloco) + ' ' + time()">
+    {{ time() }}
+  </p>
+  <dl class="tiles">
+    <div>
+      <dt>{{ 'completion.mistakes' | transloco }}</dt>
+      <dd class="tnum">{{ mistakes() }}</dd>
+    </div>
+    <div>
+      <dt>{{ 'completion.hints' | transloco }}</dt>
+      <dd class="tnum">{{ hintsUsed() }}</dd>
+    </div>
+    <div [attr.data-difficulty]="difficulty()">
+      <dt>{{ 'completion.difficulty' | transloco }}</dt>
+      <dd>{{ 'difficulty.' + difficulty() | transloco }}</dd>
+    </div>
+  </dl>
+  <div class="actions">
+    <button app-button type="button" (click)="newGame.emit()">
+      {{ 'completion.newGame' | transloco }}
+    </button>
+    <a app-button variant="secondary" routerLink="/">{{ 'completion.home' | transloco }}</a>
+  </div>
+</dialog>
+@if (celebrating()) {
+  <app-confetti (done)="celebrating.set(false)" />
+}

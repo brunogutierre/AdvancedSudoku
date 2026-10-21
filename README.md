@@ -27,14 +27,33 @@ JavaScript game with HTML tables and a precomputed puzzle bank.
   just `color-scheme`; `data-theme` on `<html>` pins light or dark, and its absence follows the
   system. An inline script in `index.html` applies the saved theme before first paint.
 - **Fonts:** [Fraunces](https://fonts.google.com/specimen/Fraunces) for the wordmark and display
-  text, [Inter](https://rsms.me/inter/) for UI and digits (tabular numbers, `cv11`, `ss01`), both
-  with `display=swap`.
+  text, [Inter](https://rsms.me/inter/) for UI and digits (tabular numbers, `cv11`, `ss01`).
+  Both are self-hosted (latin-subset variable woff2, `font-display: swap`, SIL OFL 1.1) so the
+  game looks right offline and makes no third-party requests.
 - **Accessibility:** WCAG AA contrast for every text pair in both themes, visible
   `:focus-visible` ring, 44px touch targets, skip link, landmarks, ARIA menu buttons, native
   `<dialog>`, polite live region for toasts, `prefers-reduced-motion` (plus an in-app override
   via `data-motion`), `prefers-contrast: more` and `forced-colors` support.
 - **Motion:** route changes and the theme switch use the View Transitions API (the theme is
   revealed by a circle growing from the toggle); browsers without it get plain color transitions.
+
+## Playing
+
+- Mouse, touch or keyboard: arrows move, 1-9 place, Shift+digit or notes mode (N) pencils a note,
+  Backspace/Delete/0 erase, Ctrl+Z / Ctrl+Y undo and redo, A fills every candidate, P or Esc pause.
+- **Radial picker:** long-press (or right-click, or Space) a cell to get a ring of digits around
+  it, with clear, fill candidates and a Value | Notes switch. Drag to a digit and release, or tap.
+- Feedback is synthesized with Web Audio (no audio files) and uses the Vibration API where it
+  exists; both, plus reduced motion, are in Settings.
+
+## Progressive Web App
+
+- Installable (web app manifest with relative `start_url`/`scope`, maskable icon).
+- The Angular service worker prefetches the app shell, every lazy chunk (including the engine Web
+  Worker), the fonts and the dictionaries, and caches the insane puzzle bank on first use, so
+  every page, language and difficulty works offline.
+- New versions are offered with a "Reload" toast, but never while a game is being played; the
+  game is saved and paused before reloading.
 
 ## Development
 

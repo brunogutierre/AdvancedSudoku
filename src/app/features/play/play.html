@@ -11,7 +11,7 @@
       (togglePause)="togglePause()"
     />
 
-    <div class="stage">
+    <div class="stage" [class.dimmed]="radial()" [class.shake]="combo()">
       @if (loading()) {
         <div class="skeleton" role="status">
           <div class="frame" aria-hidden="true">
@@ -43,6 +43,7 @@
           [locked]="!playing()"
           [overlay]="overlay()"
           (cellSelect)="store.select($event)"
+          (cellMenu)="openRadial($event.cell, $event.armed)"
         />
         @if (paused()) {
           <div class="overlay">
@@ -55,18 +56,18 @@
             </button>
           </div>
         }
-        <!-- Minimal win state; the completion PR replaces it (see GAME_WON_HANDLERS). -->
+        @if (combo()) {
+          <app-combo-banner (done)="combo.set(false)" />
+          <app-confetti [count]="30" />
+        }
         @if (store.isWon()) {
-          <div class="overlay won" role="status">
-            <h2 class="display">{{ 'play.won.title' | transloco }}</h2>
-            <p class="tnum">{{ 'play.won.time' | transloco: { time: finalTime() } }}</p>
-            <div class="row">
-              <button app-button type="button" (click)="newGame()">
-                {{ 'play.won.newGame' | transloco }}
-              </button>
-              <a app-button variant="secondary" routerLink="/">{{ 'play.won.home' | transloco }}</a>
-            </div>
-          </div>
+          <app-completion
+            [difficulty]="store.difficulty()"
+            [elapsedMs]="store.elapsedMs()"
+            [mistakes]="store.mistakes()"
+            [hintsUsed]="store.hintsUsed()"
+            (newGame)="newGame()"
+          />
         }
       }
     </div>
@@ -99,4 +100,9 @@
       }
     </div>
   </section>
+  @if (radial(); as anchor) {
+    @if (playing()) {
+      <app-radial-picker [anchor]="anchor" (closed)="closeRadial()" />
+    }
+  }
 </div>

@@ -26,6 +26,8 @@ describe('resolveKey', () => {
     expect(key({ code: 'KeyY', key: 'y', ctrlKey: true })).toEqual({ type: 'redo' });
     expect(key({ code: 'KeyP', key: 'p' })).toEqual({ type: 'pause', toggle: true });
     expect(key({ key: 'Escape' })).toEqual({ type: 'pause', toggle: false });
+    expect(key({ key: ' ', code: 'Space' })).toEqual({ type: 'radial' });
+    expect(key({ code: 'KeyA', key: 'a' })).toEqual({ type: 'candidates' });
   });
 
   it('maps navigation keys and ignores everything else', () => {

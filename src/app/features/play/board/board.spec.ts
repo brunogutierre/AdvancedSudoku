@@ -8,6 +8,7 @@ import { maskOf, parseGrid } from '../../../engine';
 import { KNOWN_PUZZLES } from '../../../engine/testing/fixtures';
 import type { BoardOverlay } from '../hints/hint-view';
 import { Board } from './board';
+import { CellMenuRequest, LONG_PRESS_MS } from './board';
 import { navigate } from './board-nav';
 
 const wiki = KNOWN_PUZZLES[0];
@@ -31,6 +32,7 @@ function views(selected: number | null, edit?: (values: Uint8Array, notes: Uint1
     [concealed]="concealed()"
     [overlay]="overlay()"
     (cellSelect)="picked.set($event)"
+    (cellMenu)="menu.set($event)"
   />`,
 })
 class Host {
@@ -38,6 +40,7 @@ class Host {
   readonly concealed = signal(false);
   readonly overlay = signal<BoardOverlay | null>(null);
   readonly picked = signal<number | null>(null);
+  readonly menu = signal<CellMenuRequest | null>(null);
   readonly board = viewChild.required(Board);
 }
 
@@ -155,6 +158,57 @@ describe('Board', () => {
     host.overlay.set(null);
     fixture.detectChanges();
     expect(root.querySelector('.ghost, .elim, .hint-unit')).toBeNull();
+  });
+});
+
+describe('Board long-press and context menu', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  function setup() {
+    TestBed.configureTestingModule({ providers: [provideTranslocoTesting({ 'play/en': playEn })] });
+    const fixture = TestBed.createComponent(Host);
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const cell = root.querySelector<HTMLElement>('[data-index="4"]')!;
+    const pointer = (type: string, init: PointerEventInit = {}) =>
+      cell.dispatchEvent(new PointerEvent(type, { bubbles: true, pointerType: 'touch', ...init }));
+    return { host: fixture.componentInstance, cell, pointer };
+  }
+
+  it('opens an armed menu after a long-press, and ignores the follow-up context menu', () => {
+    const { host, cell, pointer } = setup();
+    pointer('pointerdown', { clientX: 10, clientY: 10 });
+    vi.advanceTimersByTime(LONG_PRESS_MS);
+    expect(host.menu()).toEqual({ cell: 4, armed: true });
+
+    host.menu.set(null);
+    cell.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+    expect(host.menu()).toBeNull();
+  });
+
+  it('cancels the long-press when the pointer moves or lifts early', () => {
+    const { host, pointer } = setup();
+    pointer('pointerdown', { clientX: 10, clientY: 10 });
+    pointer('pointermove', { clientX: 12, clientY: 12 });
+    pointer('pointermove', { clientX: 40, clientY: 10 });
+    vi.advanceTimersByTime(LONG_PRESS_MS);
+    pointer('pointerdown');
+    pointer('pointerup');
+    vi.advanceTimersByTime(LONG_PRESS_MS);
+    pointer('pointerdown', { pointerType: 'mouse', button: 2 });
+    vi.advanceTimersByTime(LONG_PRESS_MS);
+    expect(host.menu()).toBeNull();
+  });
+
+  it('opens an unarmed menu on right-click and anchors it on the cell', () => {
+    const { host, cell } = setup();
+    const event = new MouseEvent('contextmenu', { bubbles: true, cancelable: true });
+    cell.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(true);
+    expect(host.menu()).toEqual({ cell: 4, armed: false });
+    expect(host.board().anchorOf(4, false)).toEqual({ cell: 4, x: 0, y: 0, size: 0, armed: false });
+    expect(host.board().anchorOf(99, false)).toBeNull();
   });
 });
 

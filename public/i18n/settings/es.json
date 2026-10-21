@@ -1,1 +1,52 @@
-{ "title": "Ajustes" }
+{
+  "title": "Ajustes",
+  "sections": {
+    "gameplay": "Juego",
+    "assistance": "Ayudas",
+    "feedback": "Respuesta",
+    "appearance": "Apariencia",
+    "language": "Idioma"
+  },
+  "mistakeMode": {
+    "label": "Errores",
+    "help": "Marcar conflictos de reglas, comprobar con la solución o no mostrar nada.",
+    "conflicts": "Conflictos",
+    "solution": "Solución",
+    "off": "Desactivado"
+  },
+  "autoCandidates": {
+    "label": "Notas automáticas en Fácil",
+    "help": "Empezar las partidas fáciles con todos los candidatos anotados."
+  },
+  "highlightPeers": {
+    "label": "Resaltar fila, columna y caja",
+    "help": "Colorear las casillas que comparten unidad con la selección."
+  },
+  "highlightSameDigit": {
+    "label": "Resaltar el mismo dígito",
+    "help": "Colorear casillas y notas con el dígito seleccionado."
+  },
+  "sound": {
+    "label": "Sonido",
+    "help": "Sonidos suaves sintetizados para jugadas y victorias."
+  },
+  "haptics": {
+    "label": "Vibración",
+    "help": "Vibraciones cortas en dispositivos compatibles."
+  },
+  "reducedMotion": {
+    "label": "Reducir movimiento",
+    "help": "Sustituir animaciones por transiciones simples.",
+    "system": "Sistema",
+    "on": "Activado",
+    "off": "Desactivado"
+  },
+  "theme": {
+    "label": "Tema"
+  },
+  "language": {
+    "label": "Idioma",
+    "help": "Cada idioma aparece con su propio nombre."
+  },
+  "reset": "Restablecer valores"
+}

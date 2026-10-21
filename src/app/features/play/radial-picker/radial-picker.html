@@ -1,0 +1,79 @@
+@let g = geometry();
+<div
+  class="ring"
+  [style.left.px]="g.cx"
+  [style.top.px]="g.cy"
+  [style.--d.px]="g.diameter"
+  [attr.aria-label]="'picker.label' | transloco"
+>
+  @for (bubble of bubbles(); track bubble.digit; let i = $index) {
+    <button
+      type="button"
+      class="bubble"
+      tabindex="-1"
+      [attr.role]="mode() === 'notes' ? 'menuitemcheckbox' : 'menuitemradio'"
+      [attr.aria-checked]="bubble.active"
+      [attr.data-digit]="bubble.digit"
+      [class.done]="bubble.done"
+      [class.blocked]="bubble.blocked"
+      [style.--x.px]="bubble.x"
+      [style.--y.px]="bubble.y"
+      [style.--i]="i"
+      (click)="pick(bubble.digit)"
+      (keydown)="onKeydown($event)"
+    >
+      {{ bubble.digit }}
+    </button>
+  }
+  <button
+    type="button"
+    class="hub"
+    role="menuitem"
+    tabindex="-1"
+    [attr.aria-label]="'picker.clear' | transloco"
+    (click)="clear()"
+    (keydown)="onKeydown($event)"
+  >
+    <app-icon name="erase" />
+  </button>
+</div>
+<div
+  class="extras"
+  [class.above]="!g.below"
+  [style.left.px]="g.cx"
+  [style.top.px]="g.below ? g.cy + g.diameter / 2 + 8 : g.cy - g.diameter / 2 - 8"
+>
+  <button
+    type="button"
+    class="fill"
+    role="menuitem"
+    tabindex="-1"
+    (click)="fill()"
+    (keydown)="onKeydown($event)"
+  >
+    <app-icon name="pencil" [size]="18" />
+    {{ 'picker.fill' | transloco }}
+  </button>
+  <div class="modes">
+    <button
+      type="button"
+      role="menuitemradio"
+      tabindex="-1"
+      [attr.aria-checked]="mode() === 'value'"
+      (click)="setMode('value')"
+      (keydown)="onKeydown($event)"
+    >
+      {{ 'picker.value' | transloco }}
+    </button>
+    <button
+      type="button"
+      role="menuitemradio"
+      tabindex="-1"
+      [attr.aria-checked]="mode() === 'notes'"
+      (click)="setMode('notes')"
+      (keydown)="onKeydown($event)"
+    >
+      {{ 'picker.notes' | transloco }}
+    </button>
+  </div>
+</div>

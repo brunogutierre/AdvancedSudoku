@@ -15,6 +15,8 @@
   background: var(--line-box);
   box-shadow: var(--shadow-2);
   overflow: clip;
+  // Morphs with the Continue card's progress ring on Home (View Transitions).
+  view-transition-name: board;
 }
 
 .row {
@@ -36,6 +38,7 @@
   line-height: 1;
   cursor: pointer;
   user-select: none;
+  -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
   transition: background-color var(--dur-1) var(--ease-out);
 

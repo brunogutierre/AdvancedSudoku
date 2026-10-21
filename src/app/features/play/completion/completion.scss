@@ -1,0 +1,87 @@
+.sheet {
+  width: min(440px, calc(100vw - 2 * var(--sp-4)));
+  padding: var(--sp-6) var(--sp-5) var(--sp-5);
+  border: 0;
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-3);
+  text-align: center;
+
+  &[open] {
+    display: grid;
+    justify-items: center;
+    gap: var(--sp-3);
+    animation: rise var(--dur-4) var(--ease-spring);
+  }
+
+  &::backdrop {
+    background: var(--scrim);
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--r-full);
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+
+.headline {
+  font-size: var(--fs-2xl);
+}
+
+.time {
+  font-size: var(--fs-hero);
+  font-variant-numeric: tabular-nums;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-2);
+  width: 100%;
+  margin: var(--sp-2) 0;
+
+  div {
+    padding: var(--sp-3) var(--sp-2);
+    border-radius: var(--r-md);
+    background: var(--surface-2);
+  }
+
+  dt {
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-semibold);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-3);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.96);
+  }
+}
+
+@media (forced-colors: active) {
+  .sheet {
+    border: 1px solid CanvasText;
+  }
+}

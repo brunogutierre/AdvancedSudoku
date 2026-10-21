@@ -1,1 +1,52 @@
-{ "title": "Configurações" }
+{
+  "title": "Configurações",
+  "sections": {
+    "gameplay": "Jogo",
+    "assistance": "Assistência",
+    "feedback": "Retorno",
+    "appearance": "Aparência",
+    "language": "Idioma"
+  },
+  "mistakeMode": {
+    "label": "Erros",
+    "help": "Marcar conflitos de regra, conferir com a solução ou não mostrar nada.",
+    "conflicts": "Conflitos",
+    "solution": "Solução",
+    "off": "Desligado"
+  },
+  "autoCandidates": {
+    "label": "Notas automáticas no Fácil",
+    "help": "Começar jogos fáceis com todos os candidatos anotados."
+  },
+  "highlightPeers": {
+    "label": "Destacar linha, coluna e caixa",
+    "help": "Colorir as casas que compartilham uma unidade com a seleção."
+  },
+  "highlightSameDigit": {
+    "label": "Destacar o mesmo dígito",
+    "help": "Colorir casas e notas com o dígito selecionado."
+  },
+  "sound": {
+    "label": "Som",
+    "help": "Sons suaves sintetizados para jogadas e vitórias."
+  },
+  "haptics": {
+    "label": "Vibração",
+    "help": "Vibrações curtas em aparelhos compatíveis."
+  },
+  "reducedMotion": {
+    "label": "Reduzir movimento",
+    "help": "Trocar animações por transições simples.",
+    "system": "Sistema",
+    "on": "Ligado",
+    "off": "Desligado"
+  },
+  "theme": {
+    "label": "Tema"
+  },
+  "language": {
+    "label": "Idioma",
+    "help": "Cada idioma aparece no próprio nome."
+  },
+  "reset": "Restaurar padrões"
+}

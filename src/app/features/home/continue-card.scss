@@ -37,6 +37,7 @@
 
 .ring {
   flex: none;
+  view-transition-name: board;
   transform: rotate(-90deg);
 
   circle {
