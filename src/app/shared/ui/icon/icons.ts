@@ -50,6 +50,7 @@ export const ICONS = {
   check: ['M20 6 9 17l-5-5'],
   close: ['M18 6 6 18', 'm6 6 12 12'],
   'chevron-left': ['m15 18-6-6 6-6'],
+  'chevron-right': ['m9 18 6-6-6-6'],
   trophy: [
     'M8 21h8M12 17v4',
     'M7 4h10v5a5 5 0 0 1-10 0Z',
