@@ -1,1 +1,45 @@
-{ "title": "Jogar" }
+{
+  "title": "Jogar",
+  "generating": "Gerando um quebra-cabeça único…",
+  "error": "Não foi possível criar um quebra-cabeça.",
+  "retry": "Tentar de novo",
+  "board": "Tabuleiro de Sudoku, {{ difficulty }}",
+  "cell": {
+    "given": "Linha {{ row }}, coluna {{ col }}, caixa {{ box }}, fixo {{ value }}",
+    "filled": "Linha {{ row }}, coluna {{ col }}, caixa {{ box }}, {{ value }}",
+    "empty": "Linha {{ row }}, coluna {{ col }}, caixa {{ box }}, vazia",
+    "notes": "Linha {{ row }}, coluna {{ col }}, caixa {{ box }}, vazia, notas {{ notes }}",
+    "conflict": "conflito"
+  },
+  "pad": {
+    "label": "Teclado numérico",
+    "digit": "{{ digit }}, faltam {{ count }}",
+    "done": "{{ digit }}, completo"
+  },
+  "actions": {
+    "label": "Ações do jogo",
+    "undo": "Desfazer",
+    "redo": "Refazer",
+    "erase": "Apagar",
+    "notes": "Notas",
+    "on": "Ativo",
+    "hint": "Dica"
+  },
+  "toolbar": {
+    "time": "Tempo",
+    "mistakes": "Erros: {{ count }}",
+    "pause": "Pausar",
+    "resume": "Continuar",
+    "paused": "Pausado"
+  },
+  "pause": {
+    "resume": "Continuar",
+    "newGame": "Novo jogo"
+  },
+  "won": {
+    "title": "Resolvido.",
+    "time": "Resolvido em {{ time }}",
+    "newGame": "Novo jogo",
+    "home": "Início"
+  }
+}

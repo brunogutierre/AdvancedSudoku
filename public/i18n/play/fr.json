@@ -1,1 +1,45 @@
-{ "title": "Jouer" }
+{
+  "title": "Jouer",
+  "generating": "Génération d’une grille unique…",
+  "error": "Impossible de créer une grille.",
+  "retry": "Réessayer",
+  "board": "Grille de sudoku, {{ difficulty }}",
+  "cell": {
+    "given": "Ligne {{ row }}, colonne {{ col }}, bloc {{ box }}, fixe {{ value }}",
+    "filled": "Ligne {{ row }}, colonne {{ col }}, bloc {{ box }}, {{ value }}",
+    "empty": "Ligne {{ row }}, colonne {{ col }}, bloc {{ box }}, vide",
+    "notes": "Ligne {{ row }}, colonne {{ col }}, bloc {{ box }}, vide, notes {{ notes }}",
+    "conflict": "conflit"
+  },
+  "pad": {
+    "label": "Pavé numérique",
+    "digit": "{{ digit }}, encore {{ count }}",
+    "done": "{{ digit }}, terminé"
+  },
+  "actions": {
+    "label": "Actions de jeu",
+    "undo": "Annuler",
+    "redo": "Rétablir",
+    "erase": "Effacer",
+    "notes": "Notes",
+    "on": "Activé",
+    "hint": "Indice"
+  },
+  "toolbar": {
+    "time": "Temps",
+    "mistakes": "Erreurs : {{ count }}",
+    "pause": "Pause",
+    "resume": "Reprendre",
+    "paused": "En pause"
+  },
+  "pause": {
+    "resume": "Reprendre",
+    "newGame": "Nouvelle partie"
+  },
+  "won": {
+    "title": "Résolu.",
+    "time": "Résolu en {{ time }}",
+    "newGame": "Nouvelle partie",
+    "home": "Accueil"
+  }
+}

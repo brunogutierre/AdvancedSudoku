@@ -1,1 +1,45 @@
-{ "title": "Play" }
+{
+  "title": "Play",
+  "generating": "Generating a unique puzzle…",
+  "error": "Couldn't create a puzzle.",
+  "retry": "Try again",
+  "board": "Sudoku board, {{ difficulty }}",
+  "cell": {
+    "given": "Row {{ row }}, column {{ col }}, box {{ box }}, given {{ value }}",
+    "filled": "Row {{ row }}, column {{ col }}, box {{ box }}, {{ value }}",
+    "empty": "Row {{ row }}, column {{ col }}, box {{ box }}, empty",
+    "notes": "Row {{ row }}, column {{ col }}, box {{ box }}, empty, notes {{ notes }}",
+    "conflict": "conflict"
+  },
+  "pad": {
+    "label": "Number pad",
+    "digit": "{{ digit }}, {{ count }} left",
+    "done": "{{ digit }}, complete"
+  },
+  "actions": {
+    "label": "Game actions",
+    "undo": "Undo",
+    "redo": "Redo",
+    "erase": "Erase",
+    "notes": "Notes",
+    "on": "On",
+    "hint": "Hint"
+  },
+  "toolbar": {
+    "time": "Time",
+    "mistakes": "Mistakes: {{ count }}",
+    "pause": "Pause",
+    "resume": "Resume",
+    "paused": "Paused"
+  },
+  "pause": {
+    "resume": "Resume",
+    "newGame": "New game"
+  },
+  "won": {
+    "title": "Solved.",
+    "time": "Solved in {{ time }}",
+    "newGame": "New game",
+    "home": "Home"
+  }
+}
