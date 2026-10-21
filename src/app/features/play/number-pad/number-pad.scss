@@ -1,0 +1,82 @@
+@use 'sass:math';
+
+:host {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: var(--sp-1);
+}
+
+.key {
+  position: relative;
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  place-items: center;
+  height: 56px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-medium);
+  transition:
+    transform var(--dur-1) var(--ease-out),
+    background-color var(--dur-1) var(--ease-out);
+
+  &:hover {
+    background: var(--surface-3);
+  }
+
+  &:active {
+    transform: scale(0.94);
+    background: var(--primary-tint);
+  }
+}
+
+.value {
+  grid-area: 1 / 1 / -1 / -1;
+  transition: font-size var(--dur-2) var(--ease-out);
+}
+
+.badge {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+}
+
+.done .value {
+  opacity: 0.3;
+}
+
+// Notes mode: each digit sits at its slot of the 3x3 note grid, at 60% size.
+:host(.notes) .value {
+  font-size: 0.6em;
+}
+
+@for $d from 1 through 9 {
+  :host(.notes) [data-digit='#{$d}'] .value {
+    grid-area: #{math.ceil(math.div($d, 3))} / #{($d - 1) % 3 + 1};
+  }
+}
+
+@media (width < 360px) {
+  :host {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (width >= 900px) {
+  :host {
+    grid-template-columns: repeat(3, 72px);
+    justify-content: center;
+    gap: var(--sp-2);
+  }
+
+  .key {
+    height: 72px;
+    font-size: var(--fs-2xl);
+  }
+}
