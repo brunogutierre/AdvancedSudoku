@@ -1,0 +1,52 @@
+// Route changes: short root crossfade plus a 12px slide of the page content.
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 200ms;
+}
+
+::view-transition-old(page) {
+  animation: 160ms var(--ease-out) both vt-fade-out;
+}
+
+::view-transition-new(page) {
+  animation: 240ms var(--ease-out) both vt-slide-in;
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+// Theme switch: the new snapshot is revealed by a clip-path circle animated from JS,
+// so the default crossfade must be disabled while it runs.
+:root[data-theme-transition]::view-transition-old(root),
+:root[data-theme-transition]::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+:root[data-theme-transition] * {
+  view-transition-name: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full'])::view-transition-group(*),
+  :root:not([data-motion='full'])::view-transition-old(*),
+  :root:not([data-motion='full'])::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+:root[data-motion='reduced']::view-transition-group(*),
+:root[data-motion='reduced']::view-transition-old(*),
+:root[data-motion='reduced']::view-transition-new(*) {
+  animation: none !important;
+}
