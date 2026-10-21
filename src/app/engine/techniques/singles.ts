@@ -1,11 +1,11 @@
 import { ALL_CANDIDATES, digitBit, lowestDigit, popcount } from '../bits';
 import { BOXES, cellName, COLS, ROWS, UNITS, unitRef } from '../peers';
 import type { CellIndex, UnitType } from '../types';
-import type { CandidateState, Step } from './step';
+import type { CandidateState, TechniqueStep } from './step';
 import { explainKey, unitParams } from './step';
 
 /** The last empty cell of a row, column or box takes the only missing digit. */
-export function fullHouse(state: CandidateState): Step | null {
+export function fullHouse(state: CandidateState): TechniqueStep | null {
   const { grid, candidates } = state;
   for (let u = 0; u < UNITS.length; u++) {
     let emptyCell = -1;
@@ -38,7 +38,7 @@ export function fullHouse(state: CandidateState): Step | null {
 }
 
 /** A cell with a single candidate left must hold it. */
-export function nakedSingle(state: CandidateState): Step | null {
+export function nakedSingle(state: CandidateState): TechniqueStep | null {
   const { grid, candidates } = state;
   for (let cell = 0; cell < 81; cell++) {
     if (grid[cell] !== 0 || popcount(candidates[cell]) !== 1) continue;
@@ -63,7 +63,7 @@ const HIDDEN_SINGLE_UNITS: readonly (readonly [UnitType, readonly (readonly Cell
 ];
 
 /** A digit that fits in only one cell of a unit must go there. */
-export function hiddenSingle(state: CandidateState): Step | null {
+export function hiddenSingle(state: CandidateState): TechniqueStep | null {
   const { grid, candidates } = state;
   for (const [type, units] of HIDDEN_SINGLE_UNITS) {
     for (let index = 0; index < 9; index++) {

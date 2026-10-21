@@ -1,7 +1,7 @@
 import { BOX_OF, BOXES, COL_OF, COLS, ROW_OF, ROWS } from '../peers';
 import type { CellIndex, Digit, UnitType } from '../types';
 import { ALL_DIGITS } from '../types';
-import type { CandidateState, Elimination, Step } from './step';
+import type { CandidateState, Elimination, TechniqueStep } from './step';
 import { explainKey, unitParams } from './step';
 
 /** Rows and columns with their cell lists and the cell-to-line lookup. */
@@ -38,7 +38,7 @@ function eliminationsOutside(
  * Pointing (locked candidates type 1): when a digit's candidates inside a box all lie on
  * one row (or column), the digit can be removed from that line outside the box.
  */
-export function pointing(state: CandidateState): Step | null {
+export function pointing(state: CandidateState): TechniqueStep | null {
   for (let box = 0; box < 9; box++) {
     for (const digit of ALL_DIGITS) {
       const cells = cellsWithDigit(state, BOXES[box], digit);
@@ -78,7 +78,7 @@ export function pointing(state: CandidateState): Step | null {
  * Box/line reduction (claiming, locked candidates type 2): when a digit's candidates in a
  * row (or column) all lie in one box, the digit can be removed from the rest of that box.
  */
-export function boxLineReduction(state: CandidateState): Step | null {
+export function boxLineReduction(state: CandidateState): TechniqueStep | null {
   for (const [type, units, lineOf] of LINES) {
     for (let line = 0; line < 9; line++) {
       for (const digit of ALL_DIGITS) {

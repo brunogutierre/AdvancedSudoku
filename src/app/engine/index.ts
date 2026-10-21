@@ -4,3 +4,4 @@ export * from './peers';
 export * from './board';
 export * from './prng';
 export * from './solver';
+export * from './techniques';

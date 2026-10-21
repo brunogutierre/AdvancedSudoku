@@ -1,13 +1,13 @@
 import { digitsOf, lowestDigit, popcount } from '../bits';
 import { cellName, isPeer, PEERS } from '../peers';
-import type { CandidateState, Elimination, Step } from './step';
+import type { CandidateState, Elimination, TechniqueStep } from './step';
 import { explainKey } from './step';
 
 /**
  * XY-Wing: a pivot {x,y} sees two pincers {x,z} and {y,z}. Whichever value the pivot takes,
  * one pincer becomes z, so z is removed from every cell that sees both pincers.
  */
-export function xyWing(state: CandidateState): Step | null {
+export function xyWing(state: CandidateState): TechniqueStep | null {
   const { candidates } = state;
   const isBivalue = (c: number) => popcount(candidates[c]) === 2;
   for (let pivot = 0; pivot < 81; pivot++) {

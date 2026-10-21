@@ -41,8 +41,8 @@ export interface StepHighlights {
 }
 
 /** One deduction, with everything a UI needs to show and explain it. */
-export interface Step {
-  readonly technique: StepKind;
+export interface Step<K extends StepKind = StepKind> {
+  readonly technique: K;
   readonly placements: Placement[];
   readonly eliminations: Elimination[];
   readonly highlights: StepHighlights;
@@ -58,8 +58,11 @@ export interface CandidateState {
   readonly candidates: CandidateGrid;
 }
 
+/** A step produced by a technique (never a mistake). */
+export type TechniqueStep = Step<TechniqueId>;
+
 /** A technique inspects the state and returns the first deduction it finds, or null. */
-export type Technique = (state: CandidateState) => Step | null;
+export type Technique = (state: CandidateState) => TechniqueStep | null;
 
 export function explainKey(technique: StepKind, variant = 'explain'): string {
   return `technique.${technique}.${variant}`;

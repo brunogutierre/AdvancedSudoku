@@ -3,7 +3,7 @@ import { UNITS, unitRef } from '../peers';
 import type { CellIndex, Digit } from '../types';
 import { ALL_DIGITS } from '../types';
 import { combinations } from './combinations';
-import type { CandidateState, Elimination, Step, Technique, TechniqueId } from './step';
+import type { CandidateState, Elimination, TechniqueStep, Technique, TechniqueId } from './step';
 import { cellList, explainKey, numberList, unitParams } from './step';
 
 function subsetStep(
@@ -12,7 +12,7 @@ function subsetStep(
   cells: CellIndex[],
   digits: Digit[],
   eliminations: Elimination[],
-): Step {
+): TechniqueStep {
   const unit = unitRef(unitIndex);
   return {
     technique,

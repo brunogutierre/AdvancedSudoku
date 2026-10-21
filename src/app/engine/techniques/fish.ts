@@ -3,7 +3,7 @@ import { cellAt } from '../peers';
 import type { Digit, UnitType } from '../types';
 import { ALL_DIGITS } from '../types';
 import { combinations } from './combinations';
-import type { CandidateState, Elimination, Step, Technique, TechniqueId } from './step';
+import type { CandidateState, Elimination, TechniqueStep, Technique, TechniqueId } from './step';
 import { explainKey, numberList } from './step';
 
 /**
@@ -35,7 +35,7 @@ function findFish(
   base: UnitType,
   cover: UnitType,
   at: (b: number, c: number) => number,
-): Step | null {
+): TechniqueStep | null {
   const bit = 1 << (digit - 1);
   // For each base line, the cover positions where the digit is a candidate.
   const lines: { index: number; mask: number }[] = [];
