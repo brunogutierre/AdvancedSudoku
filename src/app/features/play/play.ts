@@ -12,9 +12,11 @@ import {
   viewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TranslocoPipe, provideTranslocoScope } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { GameStore, SettingsStore } from '../../core';
 import type { Difficulty } from '../../core';
+import { ToastService } from '../../core/toast/toast.service';
+import type { Step } from '../../engine';
 import { EngineClient } from '../../engine-worker/engine-client';
 import { formatDuration } from '../../shared/format/time';
 import { Button } from '../../shared/ui/button/button';
@@ -24,6 +26,8 @@ import { ActionBar, PlayAction } from './action-bar/action-bar';
 import { Board } from './board/board';
 import { navigate } from './board/board-nav';
 import { GAME_WON_HANDLERS } from './game-events';
+import { HintPanel } from './hints/hint-panel';
+import { overlayFromStep } from './hints/hint-view';
 import { NumberPad } from './number-pad/number-pad';
 import { PlayToolbar } from './play-toolbar/play-toolbar';
 import { PlayCommand, resolveKey } from './play-keys';
@@ -53,8 +57,9 @@ const OWN_KEYS = '[role="menu"], input, textarea, select, dialog';
     Board,
     NumberPad,
     PlayToolbar,
+    HintPanel,
   ],
-  providers: [provideTranslocoScope('play')],
+  providers: [provideTranslocoScope('play', 'hints')],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(document:keydown)': 'onKeydown($event)' },
   templateUrl: './play.html',
@@ -69,6 +74,8 @@ export class Play implements OnInit {
   private readonly engine = inject(EngineClient);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly toasts = inject(ToastService);
+  private readonly transloco = inject(TranslocoService);
   private readonly wonHandlers = inject(GAME_WON_HANDLERS, { optional: true }) ?? [];
   private readonly board = viewChild(Board);
 
@@ -80,6 +87,15 @@ export class Play implements OnInit {
   protected readonly boxes = Array.from({ length: 9 }, (_, i) => i);
   private request = 0;
 
+  /** The hint panel is open; `hint` is null while the engine computes the step. */
+  protected readonly hintOpen = signal(false);
+  protected readonly hint = signal<Step | null>(null);
+  protected readonly overlay = computed(() => {
+    const step = this.hint();
+    return step ? overlayFromStep(step) : null;
+  });
+  private hintRequest = 0;
+
   constructor() {
     let previous = this.store.status();
     effect(() => {
@@ -89,6 +105,12 @@ export class Play implements OnInit {
         this.wonHandlers.forEach((handler) => handler(game));
       }
       previous = status;
+    });
+    // A hint describes one position: any board change or leaving play makes it stale.
+    effect(() => {
+      this.store.values();
+      this.store.status();
+      untracked(() => this.closeHint());
     });
     // Leaving the screen stops the clock; coming back resumes.
     inject(DestroyRef).onDestroy(() => this.store.pause());
@@ -128,7 +150,51 @@ export class Play implements OnInit {
         return this.store.erase();
       case 'notes':
         return this.store.toggleNotesMode();
-      // 'hint' is handled once the hints PR enables the button.
+      case 'hint':
+        return void this.requestHint();
+    }
+  }
+
+  protected applyHint(step: Step): void {
+    this.store.applyStep(step);
+    this.closeHint();
+    const selected = this.store.selected();
+    if (selected !== null) {
+      this.board()?.focusCell(selected);
+    }
+  }
+
+  protected closeHint(): void {
+    this.hintRequest++;
+    this.hintOpen.set(false);
+    this.hint.set(null);
+  }
+
+  /** Asks the engine for the next step on the current board, notes and solution. */
+  private async requestHint(): Promise<void> {
+    if (!this.playing()) {
+      return;
+    }
+    const id = ++this.hintRequest;
+    const { values, notes, solution } = this.store.state();
+    this.hint.set(null);
+    this.hintOpen.set(true);
+    try {
+      const step = await this.engine.hint(values, { notes, solution });
+      if (id !== this.hintRequest) {
+        return;
+      }
+      if (step) {
+        this.hint.set(step);
+      } else {
+        this.closeHint();
+        this.toasts.show({ message: this.transloco.translate('hints.panel.none') });
+      }
+    } catch {
+      if (id === this.hintRequest) {
+        this.closeHint();
+        this.toasts.show({ message: this.transloco.translate('hints.panel.failed') });
+      }
     }
   }
 
@@ -142,7 +208,10 @@ export class Play implements OnInit {
       return;
     }
     if (command.type === 'pause') {
-      if (command.toggle || this.playing()) {
+      if (!command.toggle && this.hintOpen()) {
+        event.preventDefault();
+        this.closeHint();
+      } else if (command.toggle || this.playing()) {
         event.preventDefault();
         this.togglePause();
       }
