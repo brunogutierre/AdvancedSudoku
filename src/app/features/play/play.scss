@@ -108,21 +108,6 @@
   }
 }
 
-.won {
-  background: color-mix(in srgb, var(--surface) 90%, transparent);
-
-  h2 {
-    font-size: var(--fs-2xl);
-  }
-
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--sp-3);
-  }
-}
-
 @keyframes fade-in {
   from {
     opacity: 0;

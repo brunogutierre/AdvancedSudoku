@@ -55,18 +55,14 @@
             </button>
           </div>
         }
-        <!-- Minimal win state; the completion PR replaces it (see GAME_WON_HANDLERS). -->
         @if (store.isWon()) {
-          <div class="overlay won" role="status">
-            <h2 class="display">{{ 'play.won.title' | transloco }}</h2>
-            <p class="tnum">{{ 'play.won.time' | transloco: { time: finalTime() } }}</p>
-            <div class="row">
-              <button app-button type="button" (click)="newGame()">
-                {{ 'play.won.newGame' | transloco }}
-              </button>
-              <a app-button variant="secondary" routerLink="/">{{ 'play.won.home' | transloco }}</a>
-            </div>
-          </div>
+          <app-completion
+            [difficulty]="store.difficulty()"
+            [elapsedMs]="store.elapsedMs()"
+            [mistakes]="store.mistakes()"
+            [hintsUsed]="store.hintsUsed()"
+            (newGame)="newGame()"
+          />
         }
       }
     </div>

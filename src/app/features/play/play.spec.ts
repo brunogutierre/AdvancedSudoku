@@ -202,9 +202,9 @@ describe('Play', () => {
 
     expect(store.isWon()).toBe(true);
     expect(onWon).toHaveBeenCalledOnce();
-    expect(root.querySelector('.won h2')?.textContent).toBe('Solved.');
+    expect(root.querySelector('app-completion')).not.toBeNull();
 
-    root.querySelector<HTMLButtonElement>('.won button')!.click();
+    root.querySelector<HTMLButtonElement>('app-completion .actions button')!.click();
     await harness.fixture.whenStable();
     expect(generate).toHaveBeenLastCalledWith('medium');
     expect(store.status()).toBe('playing');
