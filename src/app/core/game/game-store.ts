@@ -70,6 +70,8 @@ export class GameStore {
   readonly state = computed<GameState>(() => ({ ...this._board(), elapsedMs: this._elapsed() }));
   readonly status = computed(() => this._board().status);
   readonly selected = computed(() => this._board().selected);
+  /** The board digits; notifies only when a value changes (not on selection or clock ticks). */
+  readonly values = computed(() => this._board().values);
   readonly notesMode = computed(() => this._board().notesMode);
   readonly difficulty = computed(() => this._board().difficulty);
   readonly mode = computed(() => this._board().mode);
