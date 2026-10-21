@@ -50,6 +50,11 @@ export const ICONS = {
   check: ['M20 6 9 17l-5-5'],
   close: ['M18 6 6 18', 'm6 6 12 12'],
   'chevron-left': ['m15 18-6-6 6-6'],
+  trophy: [
+    'M8 21h8M12 17v4',
+    'M7 4h10v5a5 5 0 0 1-10 0Z',
+    'M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3',
+  ],
   'chevron-down': ['m6 9 6 6 6-6'],
 } as const satisfies Record<string, readonly string[]>;
 
