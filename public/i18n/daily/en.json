@@ -1,1 +1,21 @@
-{ "title": "Daily challenge" }
+{
+  "title": "Daily challenge",
+  "streak": "{{ count }}-day streak",
+  "week": {
+    "label": "Week",
+    "previous": "Previous week",
+    "next": "Next week"
+  },
+  "state": {
+    "done": "solved",
+    "missed": "missed",
+    "today": "today",
+    "future": "not available yet"
+  },
+  "play": "Play",
+  "continue": "Continue",
+  "solvedIn": "Solved in {{ time }}",
+  "missed": "Missed. Only today's puzzle can be played.",
+  "best": "Your best daily time: {{ time }}",
+  "rotation": "Easy on Monday and Thursday, Medium on Tuesday and Friday, Hard on Wednesday and weekends. Everyone gets the same puzzle each day."
+}

@@ -1,0 +1,91 @@
+{
+  "panel": {
+    "label": "Indice",
+    "eyebrow": "Indice {{ n }}",
+    "loading": "Recherche de l'étape suivante…",
+    "apply": "Appliquer",
+    "show": "Montrer la case",
+    "close": "Fermer l'indice",
+    "place": "Placer",
+    "eliminate": "Éliminer",
+    "none": "Aucun indice disponible : cette position demande des techniques que je ne connais pas encore.",
+    "failed": "Impossible de calculer un indice. Réessayez."
+  },
+  "unit": {
+    "row": {
+      "name": "ligne {{ index }}",
+      "in": "dans la ligne {{ index }}",
+      "of": "de la ligne {{ index }}"
+    },
+    "col": {
+      "name": "colonne {{ index }}",
+      "in": "dans la colonne {{ index }}",
+      "of": "de la colonne {{ index }}"
+    },
+    "box": {
+      "name": "bloc {{ index }}",
+      "in": "dans le bloc {{ index }}",
+      "of": "du bloc {{ index }}"
+    }
+  },
+  "units": {
+    "row": { "in": "dans les lignes {{ list }}", "of": "des lignes {{ list }}" },
+    "col": { "in": "dans les colonnes {{ list }}", "of": "des colonnes {{ list }}" }
+  },
+  "technique": {
+    "fullHouse": {
+      "name": "Dernière case",
+      "explain": "{{ cell }} est la dernière case vide {{ inUnit }}, elle doit donc contenir {{ digit }}."
+    },
+    "nakedSingle": {
+      "name": "Singleton nu",
+      "explain": "{{ digit }} est le seul candidat restant en {{ cell }}."
+    },
+    "hiddenSingle": {
+      "name": "Singleton caché",
+      "explain": "Le {{ digit }} ne peut aller que dans une seule case {{ inUnit }} : {{ cell }}."
+    },
+    "pointing": {
+      "name": "Candidats pointants",
+      "explain": "Dans le bloc {{ box }}, le {{ digit }} ne peut aller que {{ inUnit }} : on peut donc l'éliminer du reste {{ ofUnit }}."
+    },
+    "boxLineReduction": {
+      "name": "Réduction bloc/ligne",
+      "explain": "Dans la {{ unitName }}, le {{ digit }} ne peut aller que dans le bloc {{ box }} : on peut donc l'éliminer du reste du bloc {{ box }}."
+    },
+    "nakedPair": {
+      "name": "Paire nue",
+      "explain": "{{ cells }} ne peuvent contenir que {{ digits }} : ces chiffres peuvent donc être éliminés des autres cases {{ ofUnit }}."
+    },
+    "hiddenPair": {
+      "name": "Paire cachée",
+      "explain": "{{ digits }} ne peuvent aller que dans {{ cells }} {{ inUnit }} : ces cases ne peuvent donc contenir aucun autre chiffre."
+    },
+    "nakedTriple": {
+      "name": "Triplet nu",
+      "explain": "{{ cells }} ne peuvent contenir que {{ digits }} : ces chiffres peuvent donc être éliminés des autres cases {{ ofUnit }}."
+    },
+    "hiddenTriple": {
+      "name": "Triplet caché",
+      "explain": "{{ digits }} ne peuvent aller que dans {{ cells }} {{ inUnit }} : ces cases ne peuvent donc contenir aucun autre chiffre."
+    },
+    "xWing": {
+      "name": "X-Wing",
+      "explain": "X-Wing sur le {{ digit }} : {{ inBases }}, il ne peut aller que {{ inCovers }}, on peut donc l'éliminer du reste {{ ofCovers }}."
+    },
+    "swordfish": {
+      "name": "Swordfish",
+      "explain": "Swordfish sur le {{ digit }} : {{ inBases }}, il ne peut aller que {{ inCovers }}, on peut donc l'éliminer du reste {{ ofCovers }}."
+    },
+    "xyWing": {
+      "name": "XY-Wing",
+      "explain": "{{ pivot }} vaut {{ x }} ou {{ y }}. Dans les deux cas, {{ pincer1 }} ou {{ pincer2 }} vaut {{ z }} : on peut donc éliminer le {{ z }} de toute case qui voit les deux."
+    },
+    "mistake": {
+      "name": "Erreur",
+      "wrongValue": "Le chiffre en {{ cell }} n'est pas correct.",
+      "missingCandidate": "Vos notes en {{ cell }} ne contiennent pas le bon chiffre.",
+      "contradiction": "Il y a une erreur sur la grille : ces chiffres ne peuvent pas tous être justes."
+    }
+  }
+}

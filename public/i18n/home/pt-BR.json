@@ -10,12 +10,22 @@
   "noBest": "Sem melhor tempo ainda",
   "daily": {
     "eyebrow": "Desafio diário",
-    "cta": "Jogar hoje"
+    "cta": "Jogar hoje",
+    "streak": "Sequência: {{ count }}",
+    "done": "Resolvido em {{ time }}"
   },
   "continue": {
     "eyebrow": "Continuar",
     "cells": "{{ filled }} de 81 casas",
     "cta": "Continuar",
     "label": "Continuar seu jogo {{ difficulty }}"
+  },
+  "best": "Melhor {{ time }}",
+  "quick": {
+    "label": "Suas estatísticas",
+    "won": "Jogos vencidos",
+    "streak": "Melhor sequência",
+    "average": "Tempo médio",
+    "none": "–"
   }
 }

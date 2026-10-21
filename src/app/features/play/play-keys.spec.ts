@@ -18,6 +18,7 @@ describe('resolveKey', () => {
     expect(key({ key: 'Backspace' })).toEqual({ type: 'erase' });
     expect(key({ key: 'Delete' })).toEqual({ type: 'erase' });
     expect(key({ code: 'KeyN', key: 'n' })).toEqual({ type: 'notes' });
+    expect(key({ code: 'KeyH', key: 'h' })).toEqual({ type: 'hint' });
     expect(key({ code: 'KeyZ', key: 'z', ctrlKey: true })).toEqual({ type: 'undo' });
     expect(key({ code: 'KeyZ', key: 'Z', metaKey: true, shiftKey: true })).toEqual({
       type: 'redo',

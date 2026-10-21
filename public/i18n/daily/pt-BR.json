@@ -1,1 +1,21 @@
-{ "title": "Desafio diário" }
+{
+  "title": "Desafio diário",
+  "streak": "Sequência: {{ count }}",
+  "week": {
+    "label": "Semana",
+    "previous": "Semana anterior",
+    "next": "Próxima semana"
+  },
+  "state": {
+    "done": "resolvido",
+    "missed": "perdido",
+    "today": "hoje",
+    "future": "ainda não disponível"
+  },
+  "play": "Jogar",
+  "continue": "Continuar",
+  "solvedIn": "Resolvido em {{ time }}",
+  "missed": "Perdido. Só o desafio de hoje pode ser jogado.",
+  "best": "Seu melhor tempo no diário: {{ time }}",
+  "rotation": "Fácil na segunda e na quinta, Médio na terça e na sexta, Difícil na quarta e nos fins de semana. Todos recebem o mesmo jogo a cada dia."
+}

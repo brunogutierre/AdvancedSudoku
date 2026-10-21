@@ -28,7 +28,7 @@
       } @else if (failed()) {
         <div class="message" role="alert">
           <p>{{ 'play.error' | transloco }}</p>
-          <button app-button type="button" (click)="newGame()">
+          <button app-button type="button" (click)="retry()">
             {{ 'play.retry' | transloco }}
           </button>
         </div>
@@ -41,6 +41,7 @@
           "
           [concealed]="paused()"
           [locked]="!playing()"
+          [overlay]="overlay()"
           (cellSelect)="store.select($event)"
         />
         @if (paused()) {
@@ -78,6 +79,7 @@
       [canRedo]="store.canRedo()"
       [canEdit]="playing()"
       [notesMode]="store.notesMode()"
+      [hintsEnabled]="playing()"
       (action)="onAction($event)"
     />
     <app-number-pad
@@ -86,7 +88,15 @@
       [notesMode]="store.notesMode()"
       (digit)="playing() && store.input($event)"
     />
-    <!-- Hint panel slot: the hints PR renders its card (desktop) / bottom sheet (mobile) here. -->
-    <div class="assist"></div>
+    <div class="assist">
+      @if (hintOpen()) {
+        <app-hint-panel
+          [step]="hint()"
+          [number]="store.hintsUsed() + 1"
+          (apply)="applyHint($event)"
+          (closed)="closeHint()"
+        />
+      }
+    </div>
   </section>
 </div>

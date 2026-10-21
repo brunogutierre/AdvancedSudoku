@@ -1,0 +1,153 @@
+:host {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5) var(--sp-5);
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+  animation: rise var(--dur-3) var(--ease-out);
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+header,
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+header {
+  margin-block-end: calc(-1 * var(--sp-2));
+}
+
+footer {
+  justify-content: flex-end;
+}
+
+.eyebrow {
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+
+.body {
+  display: grid;
+  justify-items: start;
+  gap: var(--sp-2);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+}
+
+.chip {
+  padding: 2px var(--sp-3);
+  border-radius: var(--r-full);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+
+  @each $tier in easy, medium, hard, insane {
+    &[data-tier='#{$tier}'] {
+      background: var(--#{$tier}-tint);
+      color: var(--#{$tier});
+    }
+  }
+
+  &[data-tier='mistake'] {
+    background: var(--danger-tint);
+    color: var(--danger);
+  }
+}
+
+.explain {
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.legend {
+  display: flex;
+  gap: var(--sp-4);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+}
+
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+
+  &.place {
+    background: var(--hint-place-bg);
+    box-shadow: inset 0 0 0 2px var(--hint-place);
+  }
+
+  &.elim {
+    background: var(--hint-elim-bg);
+    box-shadow: inset 0 0 0 2px var(--hint-elim);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+// Phones: a bottom sheet over the controls, leaving the board visible above it.
+@media (width < 900px) {
+  :host {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 20;
+    max-height: 50dvh;
+    overflow-y: auto;
+    padding-bottom: calc(var(--sp-5) + env(safe-area-inset-bottom));
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    box-shadow: var(--shadow-3);
+
+    &::before {
+      content: '';
+      justify-self: center;
+      width: 36px;
+      height: 4px;
+      border-radius: var(--r-full);
+      background: var(--border-strong);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
+}

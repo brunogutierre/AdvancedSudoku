@@ -6,6 +6,7 @@ import type { CellView } from '../../../core';
 import { cellViews } from '../../../core/game/game-selectors';
 import { maskOf, parseGrid } from '../../../engine';
 import { KNOWN_PUZZLES } from '../../../engine/testing/fixtures';
+import type { BoardOverlay } from '../hints/hint-view';
 import { Board } from './board';
 import { navigate } from './board-nav';
 
@@ -28,12 +29,14 @@ function views(selected: number | null, edit?: (values: Uint8Array, notes: Uint1
     [cells]="cells()"
     label="Sudoku board, Easy"
     [concealed]="concealed()"
+    [overlay]="overlay()"
     (cellSelect)="picked.set($event)"
   />`,
 })
 class Host {
   readonly cells = signal<readonly CellView[]>(views(null));
   readonly concealed = signal(false);
+  readonly overlay = signal<BoardOverlay | null>(null);
   readonly picked = signal<number | null>(null);
   readonly board = viewChild.required(Board);
 }
@@ -112,6 +115,46 @@ describe('Board', () => {
     host.board().focusCell(20);
     expect(document.activeElement).toBe(cell(20));
     expect(host.board().hasFocus()).toBe(true);
+  });
+
+  it('draws the hint overlay: ghost digits, struck notes, pattern, mistakes and units', () => {
+    const { fixture, root, cell, host } = setup();
+    host.cells.set(views(null, (_, notes) => (notes[3] = maskOf([2, 6]))));
+    host.overlay.set({
+      place: new Map([[2, 4]]),
+      eliminate: new Map([
+        [3, maskOf([2])],
+        [5, maskOf([8])],
+      ]),
+      pattern: new Set([6]),
+      units: [
+        { type: 'row', index: 0 },
+        { type: 'col', index: 4 },
+        { type: 'box', index: 4 },
+      ],
+      mistake: new Set([7]),
+    });
+    fixture.detectChanges();
+
+    expect(cell(2).classList).toContain('hint-place');
+    expect(cell(2).querySelector('.ghost')?.textContent).toBe('4');
+    // A note the player has, and one the player never wrote, both shown struck.
+    expect(Array.from(cell(3).querySelectorAll('.elim')).map((n) => n.textContent)).toEqual(['2']);
+    expect(cell(3).querySelector('.notes')?.textContent?.replace(/\s/g, '')).toBe('26');
+    expect(cell(5).querySelector('.elim')?.textContent).toBe('8');
+    expect(cell(6).classList).toContain('hint-pattern');
+    expect(cell(7).classList).toContain('hint-mistake');
+
+    const frames = Array.from(root.querySelectorAll<HTMLElement>('.hint-unit'));
+    expect(frames.map((f) => [f.style.top, f.style.left])).toEqual([
+      ['0%', '0%'],
+      ['0%', `${(100 / 9) * 4}%`],
+      [`${(100 / 9) * 3}%`, `${(100 / 9) * 3}%`],
+    ]);
+
+    host.overlay.set(null);
+    fixture.detectChanges();
+    expect(root.querySelector('.ghost, .elim, .hint-unit')).toBeNull();
   });
 });
 

@@ -1,0 +1,48 @@
+<header>
+  <p class="eyebrow">{{ 'hints.panel.eyebrow' | transloco: { n: number() } }}</p>
+  <button
+    app-button
+    variant="icon"
+    type="button"
+    class="close"
+    [attr.aria-label]="'hints.panel.close' | transloco"
+    (click)="closed.emit()"
+  >
+    <app-icon name="close" [size]="20" />
+  </button>
+</header>
+
+@let current = step();
+<div class="body" aria-live="polite">
+  @if (current) {
+    <h2 class="name display">{{ name() }}</h2>
+    @if (tier(); as level) {
+      <span class="chip" [attr.data-tier]="level">{{ 'difficulty.' + level | transloco }}</span>
+    } @else {
+      <span class="chip" data-tier="mistake">{{ name() }}</span>
+    }
+    <p class="explain">{{ explanation() }}</p>
+  } @else {
+    <p class="explain muted" role="status">{{ 'hints.panel.loading' | transloco }}</p>
+  }
+</div>
+
+@if (current && !isMistake()) {
+  <ul class="legend" aria-hidden="true">
+    @if (current.placements.length) {
+      <li><span class="swatch place"></span>{{ 'hints.panel.place' | transloco }}</li>
+    }
+    @if (current.eliminations.length) {
+      <li><span class="swatch elim"></span>{{ 'hints.panel.eliminate' | transloco }}</li>
+    }
+  </ul>
+}
+
+<footer>
+  <button app-button variant="ghost" type="button" (click)="closed.emit()">
+    {{ 'hints.panel.close' | transloco }}
+  </button>
+  <button app-button type="button" [disabled]="!current" (click)="current && apply.emit(current)">
+    {{ (isMistake() ? 'hints.panel.show' : 'hints.panel.apply') | transloco }}
+  </button>
+</footer>

@@ -19,6 +19,8 @@
 }
 
 .daily {
+  --accent: var(--easy);
+
   display: grid;
   align-content: start;
   justify-items: start;
@@ -34,6 +36,70 @@
   .date {
     margin-bottom: var(--sp-2);
     font-size: var(--fs-xl);
+  }
+}
+
+.daily-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-2);
+}
+
+.chip {
+  padding: 2px var(--sp-3);
+  border-radius: var(--r-full);
+  background: var(--surface);
+  color: var(--accent, var(--primary));
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+
+.streak {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+
+  &.active {
+    color: var(--flame);
+  }
+}
+
+.done {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--success);
+  font-weight: var(--fw-semibold);
+}
+
+.quick dl {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-3);
+  margin: 0;
+}
+
+.tile {
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+
+  dt {
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-semibold);
   }
 }
 
@@ -130,7 +196,8 @@
     align-self: end;
   }
 
-  .new-game {
+  .new-game,
+  .quick {
     grid-column: 1 / -1;
   }
 
