@@ -1,13 +1,5 @@
 import { computed, DestroyRef, DOCUMENT, effect, inject, Injectable, signal } from '@angular/core';
-import {
-  BOX_OF,
-  COL_OF,
-  computeCandidates,
-  conflicts,
-  isPeer,
-  parseGrid,
-  ROW_OF,
-} from '../../engine';
+import { COL_OF, computeCandidates, parseGrid, ROW_OF } from '../../engine';
 import type { CellIndex, Digit, Step } from '../../engine';
 import { PersistenceService, STORAGE_KEYS } from '../persistence/persistence.service';
 import { SettingsStore } from '../settings/settings-store';
