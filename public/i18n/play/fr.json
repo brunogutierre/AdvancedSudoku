@@ -35,5 +35,15 @@
   "pause": {
     "resume": "Reprendre",
     "newGame": "Nouvelle partie"
+  },
+  "live": {
+    "placed": "{{ digit }} placé ligne {{ row }}, colonne {{ col }}",
+    "erased": "Ligne {{ row }}, colonne {{ col }} effacée",
+    "conflict": "Conflit : le {{ digit }} ligne {{ row }}, colonne {{ col }} est déjà dans sa ligne, colonne ou bloc",
+    "row": "Ligne {{ n }} terminée",
+    "col": "Colonne {{ n }} terminée",
+    "box": "Bloc {{ n }} terminé",
+    "digit": "Tous les {{ digit }} sont placés",
+    "won": "Grille résolue"
   }
 }

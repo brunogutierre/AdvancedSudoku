@@ -233,6 +233,25 @@ describe('Play', () => {
     expect(store.status()).toBe('playing');
   });
 
+  it('announces moves in a polite live region', async () => {
+    const { harness, root, store, press } = await open('/play?difficulty=medium');
+    const live = root.querySelector('[aria-live="polite"]')!;
+    const text = () => live.textContent?.replace('\u200b', '').trim();
+    store.select(2);
+    await press({ code: 'Digit4', key: '4' });
+    harness.detectChanges();
+    expect(text()).toBe('4 placed at row 1, column 3');
+    await press({ key: 'Backspace' });
+    harness.detectChanges();
+    expect(text()).toBe('Row 1, column 3 cleared');
+    await press({ code: 'Digit4', key: '4' });
+    harness.detectChanges();
+    expect(text()).toBe('4 placed at row 1, column 3');
+    await press({ code: 'Digit5', key: '5' });
+    harness.detectChanges();
+    expect(live.textContent).toContain('Conflict: 5 at row 1, column 3');
+  });
+
   it('compares with the previous best before the win is recorded', async () => {
     const stats = TestBed.inject(StatsStore);
     const store = TestBed.inject(GameStore);

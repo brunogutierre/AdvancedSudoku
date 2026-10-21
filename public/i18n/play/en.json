@@ -35,5 +35,15 @@
   "pause": {
     "resume": "Resume",
     "newGame": "New game"
+  },
+  "live": {
+    "placed": "{{ digit }} placed at row {{ row }}, column {{ col }}",
+    "erased": "Row {{ row }}, column {{ col }} cleared",
+    "conflict": "Conflict: {{ digit }} at row {{ row }}, column {{ col }} repeats in its row, column or box",
+    "row": "Row {{ n }} complete",
+    "col": "Column {{ n }} complete",
+    "box": "Box {{ n }} complete",
+    "digit": "All {{ digit }}s placed",
+    "won": "Puzzle solved"
   }
 }
