@@ -1,0 +1,143 @@
+.grid {
+  display: grid;
+  gap: var(--sp-5);
+}
+
+.hero {
+  display: grid;
+  gap: var(--sp-2);
+
+  h1 {
+    font-size: var(--fs-hero);
+    font-weight: var(--fw-semibold);
+  }
+}
+
+.sub {
+  color: var(--text-muted);
+  font-size: var(--fs-lg);
+}
+
+.daily {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: var(--sp-2);
+  padding: var(--sp-5);
+  border-radius: var(--r-xl);
+  background: var(--primary-tint);
+
+  .eyebrow {
+    color: var(--primary);
+  }
+
+  .date {
+    margin-bottom: var(--sp-2);
+    font-size: var(--fs-xl);
+  }
+}
+
+.new-game {
+  display: grid;
+  gap: var(--sp-4);
+
+  h2 {
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-semibold);
+  }
+
+  ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--sp-4);
+    margin: 0;
+  }
+}
+
+.difficulty {
+  --accent: var(--easy);
+  --tint: var(--easy-tint);
+
+  display: flex;
+  flex-direction: column;
+  height: 132px;
+  padding: var(--sp-4);
+  border: 1px solid transparent;
+  border-radius: var(--r-lg);
+  background: var(--tint);
+  color: var(--text);
+  text-decoration: none;
+  transition:
+    border-color var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out);
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+
+    .glyph {
+      transform: rotate(8deg);
+    }
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+[data-difficulty='medium'] {
+  --accent: var(--medium);
+  --tint: var(--medium-tint);
+}
+
+[data-difficulty='hard'] {
+  --accent: var(--hard);
+  --tint: var(--hard-tint);
+}
+
+[data-difficulty='insane'] {
+  --accent: var(--insane);
+  --tint: var(--insane-tint);
+}
+
+.glyph {
+  fill: var(--accent);
+  transition: transform var(--dur-4) var(--ease-spring);
+}
+
+.name {
+  margin-top: auto;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+}
+
+.best {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+@media (width >= 900px) {
+  .grid {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .hero {
+    grid-column: span 7;
+    padding-top: var(--sp-7);
+  }
+
+  .daily {
+    grid-column: span 5;
+    align-self: end;
+  }
+
+  .new-game {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (forced-colors: active) {
+  .difficulty,
+  .daily {
+    border: 1px solid CanvasText;
+  }
+}
