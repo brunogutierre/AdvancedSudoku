@@ -1,0 +1,25 @@
+<!-- Keyboard users close with Esc (native dialog behavior); the click only adds backdrop dismissal. -->
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+<dialog
+  #dialog
+  [attr.aria-labelledby]="titleId"
+  (close)="onNativeClose()"
+  (click)="onBackdropClick($event)"
+>
+  <div class="frame">
+    <header>
+      <h2 class="display" [id]="titleId">{{ heading() }}</h2>
+      <button
+        app-button
+        variant="icon"
+        type="button"
+        [attr.aria-label]="'dialog.close' | transloco"
+        (click)="close()"
+      >
+        <app-icon name="close" />
+      </button>
+    </header>
+    <div class="body"><ng-content /></div>
+    <footer><ng-content select="[dialog-actions]" /></footer>
+  </div>
+</dialog>
