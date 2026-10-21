@@ -9,7 +9,6 @@
   padding: var(--sp-1);
   border-radius: var(--r-full);
   background: var(--surface-2);
-  overflow-x: auto;
   justify-self: start;
   max-width: 100%;
 
@@ -17,6 +16,8 @@
     --accent: var(--primary);
     --tint: var(--primary-tint);
 
+    flex: 1 1 auto;
+    min-width: 0;
     min-height: 40px;
     padding: 0 var(--sp-4);
     border: 0;
@@ -84,6 +85,7 @@ h2 {
 .streak {
   display: grid;
   grid-template-columns: auto 1fr;
+  align-content: start;
   align-items: center;
   gap: var(--sp-2) var(--sp-3);
   color: var(--flame);
@@ -124,8 +126,21 @@ h2 {
   color: var(--text-muted);
 }
 
+// Phones: the five filters share the full width instead of scrolling sideways.
+@media (width < 600px) {
+  .filters {
+    justify-self: stretch;
+
+    button {
+      padding: 0 var(--sp-2);
+      font-size: var(--fs-sm);
+    }
+  }
+}
+
 @media (width >= 900px) {
   .stats {
+    align-items: start;
     grid-template-columns: 1fr 2fr;
   }
 

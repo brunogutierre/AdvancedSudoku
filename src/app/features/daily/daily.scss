@@ -15,7 +15,11 @@
 .month {
   font-size: var(--fs-2xl);
   font-weight: var(--fw-semibold);
-  text-transform: capitalize;
+
+  // Only the first letter: "capitalize" would give "Outubro De 2026" in Portuguese.
+  &::first-letter {
+    text-transform: uppercase;
+  }
 }
 
 .streak {

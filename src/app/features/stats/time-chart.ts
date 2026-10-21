@@ -3,14 +3,8 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import type { GameRecord } from '../../core';
 import { formatDuration } from '../../shared/format/time';
 
-const WIDTH = 320;
-const HEIGHT = 160;
-/** Room above the tallest bar for the "best" label. */
-const TOP = 18;
-const BAR = 8;
-
 /**
- * Solve times of recent wins as an SVG bar chart (no chart library): one bar per game, colored
+ * Solve times of recent wins as a bar chart in plain HTML/CSS (no chart library): one bar per game, colored
  * by difficulty, assisted games faded, fastest unassisted game labeled. A visually hidden table
  * carries the same data for screen readers.
  */
@@ -19,101 +13,124 @@ const BAR = 8;
   imports: [TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <svg
-      [attr.viewBox]="'0 0 ' + width + ' ' + height"
+    <div
+      class="plot"
       role="img"
       [attr.aria-label]="'stats.chart.summary' | transloco: { count: records().length }"
     >
-      @for (line of gridlines(); track line.y) {
-        <line class="grid" x1="0" [attr.x2]="width" [attr.y1]="line.y" [attr.y2]="line.y" />
-        <text class="axis tnum" x="0" [attr.y]="line.y - 4">{{ line.label }}</text>
+      @for (line of gridlines(); track line.label) {
+        <div class="grid" [style.bottom.%]="line.pct">
+          <span class="axis tnum">{{ line.label }}</span>
+        </div>
       }
-      @for (bar of bars(); track $index) {
-        <rect
-          [attr.data-difficulty]="bar.difficulty"
-          [class.assisted]="bar.assisted"
-          [attr.x]="bar.x"
-          [attr.y]="bar.y"
-          [attr.width]="barWidth"
-          [attr.height]="bar.height"
-          rx="3"
-        />
-        @if (bar.best) {
-          <text class="best tnum" [attr.x]="bar.x + barWidth / 2" [attr.y]="bar.y - 6">
-            {{ bar.time }}
-          </text>
-        }
-      }
-    </svg>
-    <table class="visually-hidden">
-      <caption>
-        {{
-          'stats.chart.summary' | transloco: { count: records().length }
-        }}
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">{{ 'stats.chart.game' | transloco }}</th>
-          <th scope="col">{{ 'stats.chart.difficulty' | transloco }}</th>
-          <th scope="col">{{ 'stats.chart.time' | transloco }}</th>
-        </tr>
-      </thead>
-      <tbody>
+      <div class="bars">
         @for (bar of bars(); track $index) {
-          <tr>
-            <td>{{ $index + 1 }}</td>
-            <td>{{ 'difficulty.' + bar.difficulty | transloco }}</td>
-            <td>
-              {{ bar.time
-              }}{{ bar.assisted ? ' (' + ('stats.chart.assisted' | transloco) + ')' : '' }}
-            </td>
-          </tr>
+          <div
+            class="bar"
+            [attr.data-difficulty]="bar.difficulty"
+            [class.assisted]="bar.assisted"
+            [style.height.%]="bar.pct"
+          >
+            @if (bar.best) {
+              <span class="best tnum">{{ bar.time }}</span>
+            }
+          </div>
         }
-      </tbody>
-    </table>
+      </div>
+    </div>
+    <!-- Tables ignore width: 1px, so the hiding box is a wrapper (no page overflow on phones). -->
+    <div class="visually-hidden">
+      <table>
+        <caption>
+          {{
+            'stats.chart.summary' | transloco: { count: records().length }
+          }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ 'stats.chart.game' | transloco }}</th>
+            <th scope="col">{{ 'stats.chart.difficulty' | transloco }}</th>
+            <th scope="col">{{ 'stats.chart.time' | transloco }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (bar of bars(); track $index) {
+            <tr>
+              <td>{{ $index + 1 }}</td>
+              <td>{{ 'difficulty.' + bar.difficulty | transloco }}</td>
+              <td>
+                {{ bar.time
+                }}{{ bar.assisted ? ' (' + ('stats.chart.assisted' | transloco) + ')' : '' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   `,
   styles: `
     :host {
       display: block;
     }
-    svg {
-      display: block;
-      width: 100%;
-      height: auto;
-      overflow: visible;
+    /* HTML bars instead of a scaled SVG: text stays at its real size, bars stay 8px wide. */
+    .plot {
+      position: relative;
+      height: 160px;
+      margin-top: 18px;
     }
     .grid {
-      stroke: var(--line-thin);
-      stroke-width: 1;
+      position: absolute;
+      left: 44px;
+      right: 0;
+      border-top: 1px solid var(--line-thin);
     }
     .axis {
-      fill: var(--text-muted);
-      font-size: 10px;
+      position: absolute;
+      left: -44px;
+      top: 0;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: var(--fs-xs);
     }
-    rect {
-      fill: var(--easy);
+    .bars {
+      position: absolute;
+      inset: 0 0 0 44px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
     }
-    rect[data-difficulty='medium'] {
-      fill: var(--medium);
+    .bar {
+      position: relative;
+      width: 8px;
+      min-height: 2px;
+      border-radius: var(--r-xs) var(--r-xs) 0 0;
+      background: var(--easy);
     }
-    rect[data-difficulty='hard'] {
-      fill: var(--hard);
+    .bar[data-difficulty='medium'] {
+      background: var(--medium);
     }
-    rect[data-difficulty='insane'] {
-      fill: var(--insane);
+    .bar[data-difficulty='hard'] {
+      background: var(--hard);
     }
-    rect.assisted {
+    .bar[data-difficulty='insane'] {
+      background: var(--insane);
+    }
+    .bar.assisted {
       opacity: 0.4;
     }
     .best {
-      fill: var(--text);
-      font-size: 11px;
+      position: absolute;
+      bottom: calc(100% + 4px);
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--text);
+      font-size: var(--fs-xs);
       font-weight: var(--fw-semibold);
-      text-anchor: middle;
+      white-space: nowrap;
     }
     @media (forced-colors: active) {
-      rect {
-        fill: CanvasText;
+      .bar {
+        background: CanvasText;
       }
     }
   `,
@@ -122,27 +139,19 @@ export class TimeChart {
   /** Oldest first. */
   readonly records = input.required<readonly GameRecord[]>();
 
-  protected readonly width = WIDTH;
-  protected readonly height = HEIGHT;
-  protected readonly barWidth = BAR;
-
   private readonly maxMs = computed(() => Math.max(1, ...this.records().map((r) => r.elapsedMs)));
 
   protected readonly bars = computed(() => {
     const records = this.records();
     const max = this.maxMs();
-    const step = WIDTH / Math.max(records.length, 1);
     const unassisted = records.filter((r) => !r.assisted).map((r) => r.elapsedMs);
     const best = unassisted.length ? Math.min(...unassisted) : -1;
     let labeled = false;
-    return records.map((r, i) => {
-      const height = Math.max(2, ((HEIGHT - TOP) * r.elapsedMs) / max);
+    return records.map((r) => {
       const isBest = !labeled && !r.assisted && r.elapsedMs === best;
       labeled ||= isBest;
       return {
-        x: i * step + (step - BAR) / 2,
-        y: HEIGHT - height,
-        height,
+        pct: (100 * r.elapsedMs) / max,
         difficulty: r.difficulty,
         assisted: r.assisted,
         best: isBest,
@@ -154,9 +163,6 @@ export class TimeChart {
   /** Three horizontal guides at 1/3, 2/3 and 3/3 of the longest time. */
   protected readonly gridlines = computed(() => {
     const max = this.maxMs();
-    return [1, 2, 3].map((k) => ({
-      y: HEIGHT - ((HEIGHT - TOP) * k) / 3,
-      label: formatDuration((max * k) / 3),
-    }));
+    return [1, 2, 3].map((k) => ({ pct: (100 * k) / 3, label: formatDuration((max * k) / 3) }));
   });
 }
