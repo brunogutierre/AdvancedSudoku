@@ -1,49 +1,47 @@
-import { DOCUMENT, Injectable, inject, signal } from '@angular/core';
-import { LocalStorage, STORAGE_PREFIX } from '../storage/local-storage';
+import { DOCUMENT, Injectable, effect, inject } from '@angular/core';
+import type { ReducedMotion } from '../settings/settings.model';
+import { SettingsStore } from '../settings/settings-store';
 
 export type ThemeMode = 'system' | 'light' | 'dark';
 
 export const THEME_MODES: readonly ThemeMode[] = ['system', 'light', 'dark'];
 
-/** Must match the inline script in index.html, which applies the theme before first paint. */
-export const THEME_STORAGE_KEY = `${STORAGE_PREFIX}theme`;
-
 export function isThemeMode(value: unknown): value is ThemeMode {
   return value === 'system' || value === 'light' || value === 'dark';
 }
 
+const MOTION_ATTR: Record<ReducedMotion, string | null> = {
+  system: null,
+  on: 'reduced',
+  off: 'full',
+};
+
 /**
- * Light / dark / system theme. Colors live in CSS (`light-dark()` + `color-scheme`); this
- * service only toggles `data-theme` on `<html>` and persists the choice.
+ * Applies the appearance settings to `<html>`: `data-theme` (absent = follow the system) and
+ * `data-motion` (reduced-motion override). Colors live in CSS (`light-dark()`).
  *
- * `setMode` is the single entry point, so a future settings store can own persistence and
- * simply call it.
+ * SettingsStore owns the values and their persistence; the inline script in index.html reads
+ * the same stored settings before first paint.
  */
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly document = inject(DOCUMENT);
-  private readonly storage = inject(LocalStorage);
-  private readonly _mode = signal<ThemeMode>(this.readStored());
+  private readonly settings = inject(SettingsStore);
 
-  readonly mode = this._mode.asReadonly();
+  readonly mode = this.settings.theme;
 
   constructor() {
-    this.apply(this._mode());
+    // Applied now (first paint) and again whenever settings change from anywhere.
+    effect(() => this.apply(this.mode()));
+    effect(() => this.applyMotion(this.settings.reducedMotion()));
+    this.apply(this.mode());
+    this.applyMotion(this.settings.reducedMotion());
   }
 
+  /** Changes the theme and updates the DOM synchronously (needed inside a View Transition). */
   setMode(mode: ThemeMode): void {
-    this._mode.set(mode);
+    this.settings.set('theme', mode);
     this.apply(mode);
-    if (mode === 'system') {
-      this.storage.remove(THEME_STORAGE_KEY);
-    } else {
-      this.storage.set(THEME_STORAGE_KEY, mode);
-    }
-  }
-
-  private readStored(): ThemeMode {
-    const stored = this.storage.get(THEME_STORAGE_KEY);
-    return isThemeMode(stored) ? stored : 'system';
   }
 
   private apply(mode: ThemeMode): void {
@@ -52,6 +50,16 @@ export class ThemeService {
       delete root.dataset['theme'];
     } else {
       root.dataset['theme'] = mode;
+    }
+  }
+
+  private applyMotion(motion: ReducedMotion): void {
+    const root = this.document.documentElement;
+    const value = MOTION_ATTR[motion];
+    if (value === null) {
+      delete root.dataset['motion'];
+    } else {
+      root.dataset['motion'] = value;
     }
   }
 }
