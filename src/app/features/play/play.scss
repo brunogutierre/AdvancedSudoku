@@ -36,6 +36,24 @@
   &.dimmed app-board {
     opacity: 0.85;
   }
+
+  &.shake app-board {
+    animation: shake 360ms var(--ease-out) 120ms;
+  }
+}
+
+@keyframes shake {
+  25% {
+    transform: translateX(-6px);
+  }
+
+  50% {
+    transform: translateX(6px);
+  }
+
+  75% {
+    transform: translateX(-3px);
+  }
 }
 
 .skeleton {

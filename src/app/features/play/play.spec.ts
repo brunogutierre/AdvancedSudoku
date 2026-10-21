@@ -246,6 +246,19 @@ describe('Play', () => {
     expect(root.querySelector('app-radial-picker')).toBeNull();
   });
 
+  it('runs the Konami combo once while playing', async () => {
+    const { harness, root, store } = await open('/play?difficulty=medium');
+    const keys = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+    for (const key of [...keys, 'ArrowLeft', 'ArrowRight', 'b', 'a']) {
+      document.body.dispatchEvent(
+        new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }),
+      );
+    }
+    harness.detectChanges();
+    expect(root.querySelector('app-combo-banner')).not.toBeNull();
+    expect(store.state().assisted).toBe(true);
+  });
+
   it('pauses the game when leaving the screen', async () => {
     const { harness, store } = await open('/play?difficulty=medium');
     await harness.navigateByUrl('/');

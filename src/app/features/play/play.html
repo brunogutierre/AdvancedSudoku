@@ -11,7 +11,7 @@
       (togglePause)="togglePause()"
     />
 
-    <div class="stage" [class.dimmed]="radial()">
+    <div class="stage" [class.dimmed]="radial()" [class.shake]="combo()">
       @if (loading()) {
         <div class="skeleton" role="status">
           <div class="frame" aria-hidden="true">
@@ -54,6 +54,10 @@
               {{ 'play.pause.newGame' | transloco }}
             </button>
           </div>
+        }
+        @if (combo()) {
+          <app-combo-banner (done)="combo.set(false)" />
+          <app-confetti [count]="30" />
         }
         @if (store.isWon()) {
           <app-completion

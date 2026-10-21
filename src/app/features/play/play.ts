@@ -25,6 +25,9 @@ import { Board } from './board/board';
 import { Completion } from './completion/completion';
 import { navigate } from './board/board-nav';
 import { GAME_WON_HANDLERS } from './game-events';
+import { ComboBanner } from './combo-banner/combo-banner';
+import { Confetti } from './completion/confetti';
+import { connectKonami, createComboBreaker } from './feel/combo';
 import { connectFeel } from './feel/connect-feel';
 import { NumberPad } from './number-pad/number-pad';
 import { PlayToolbar } from './play-toolbar/play-toolbar';
@@ -53,7 +56,9 @@ const OWN_KEYS = '[role="menu"], input, textarea, select, dialog';
     Skeleton,
     ActionBar,
     Board,
+    ComboBanner,
     Completion,
+    Confetti,
     NumberPad,
     PlayToolbar,
     RadialPicker,
@@ -83,10 +88,19 @@ export class Play implements OnInit {
   protected readonly playing = computed(() => this.store.status() === 'playing');
   protected readonly boxes = Array.from({ length: 9 }, (_, i) => i);
   protected readonly radial = signal<RadialAnchor | null>(null);
+  /** Konami code easter egg in progress. */
+  protected readonly combo = signal(false);
+  private readonly comboBreaker = createComboBreaker();
   private request = 0;
 
   constructor() {
     connectFeel(this.board);
+    connectKonami(() => {
+      if (this.playing() && !this.combo()) {
+        this.combo.set(true);
+        this.comboBreaker();
+      }
+    });
     let previous = this.store.status();
     effect(() => {
       const status = this.store.status();
