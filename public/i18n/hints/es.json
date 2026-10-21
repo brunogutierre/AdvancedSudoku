@@ -1,0 +1,91 @@
+{
+  "panel": {
+    "label": "Pista",
+    "eyebrow": "Pista {{ n }}",
+    "loading": "Buscando el siguiente paso…",
+    "apply": "Aplicar",
+    "show": "Mostrar casilla",
+    "close": "Cerrar pista",
+    "place": "Colocar",
+    "eliminate": "Eliminar",
+    "none": "No hay pista disponible: esta posición requiere técnicas que todavía no conozco.",
+    "failed": "No se pudo calcular una pista. Inténtalo de nuevo."
+  },
+  "unit": {
+    "row": {
+      "name": "fila {{ index }}",
+      "in": "en la fila {{ index }}",
+      "of": "de la fila {{ index }}"
+    },
+    "col": {
+      "name": "columna {{ index }}",
+      "in": "en la columna {{ index }}",
+      "of": "de la columna {{ index }}"
+    },
+    "box": {
+      "name": "caja {{ index }}",
+      "in": "en la caja {{ index }}",
+      "of": "de la caja {{ index }}"
+    }
+  },
+  "units": {
+    "row": { "in": "en las filas {{ list }}", "of": "de las filas {{ list }}" },
+    "col": { "in": "en las columnas {{ list }}", "of": "de las columnas {{ list }}" }
+  },
+  "technique": {
+    "fullHouse": {
+      "name": "Último hueco",
+      "explain": "{{ cell }} es la última casilla vacía {{ inUnit }}, así que debe ser {{ digit }}."
+    },
+    "nakedSingle": {
+      "name": "Candidato único",
+      "explain": "{{ digit }} es el único candidato que queda en {{ cell }}."
+    },
+    "hiddenSingle": {
+      "name": "Único oculto",
+      "explain": "El {{ digit }} solo cabe en una casilla {{ inUnit }}: {{ cell }}."
+    },
+    "pointing": {
+      "name": "Apuntamiento",
+      "explain": "Dentro de la caja {{ box }}, el {{ digit }} solo puede ir {{ inUnit }}, así que se puede eliminar del resto {{ ofUnit }}."
+    },
+    "boxLineReduction": {
+      "name": "Reducción caja/línea",
+      "explain": "En la {{ unitName }}, el {{ digit }} solo puede ir en la caja {{ box }}, así que se puede eliminar del resto de la caja {{ box }}."
+    },
+    "nakedPair": {
+      "name": "Pareja desnuda",
+      "explain": "{{ cells }} solo pueden contener {{ digits }}, así que esos dígitos se pueden eliminar de las demás casillas {{ ofUnit }}."
+    },
+    "hiddenPair": {
+      "name": "Pareja oculta",
+      "explain": "{{ digits }} solo caben en {{ cells }} {{ inUnit }}, así que esas casillas no pueden contener ningún otro dígito."
+    },
+    "nakedTriple": {
+      "name": "Trío desnudo",
+      "explain": "{{ cells }} solo pueden contener {{ digits }}, así que esos dígitos se pueden eliminar de las demás casillas {{ ofUnit }}."
+    },
+    "hiddenTriple": {
+      "name": "Trío oculto",
+      "explain": "{{ digits }} solo caben en {{ cells }} {{ inUnit }}, así que esas casillas no pueden contener ningún otro dígito."
+    },
+    "xWing": {
+      "name": "X-Wing",
+      "explain": "X-Wing en el {{ digit }}: {{ inBases }}, solo puede ir {{ inCovers }}, así que se puede eliminar del resto {{ ofCovers }}."
+    },
+    "swordfish": {
+      "name": "Pez espada",
+      "explain": "Pez espada en el {{ digit }}: {{ inBases }}, solo puede ir {{ inCovers }}, así que se puede eliminar del resto {{ ofCovers }}."
+    },
+    "xyWing": {
+      "name": "XY-Wing",
+      "explain": "{{ pivot }} es {{ x }} o {{ y }}. En cualquier caso, {{ pincer1 }} o {{ pincer2 }} será {{ z }}, así que el {{ z }} se puede eliminar de toda casilla que vea a ambas."
+    },
+    "mistake": {
+      "name": "Error",
+      "wrongValue": "El dígito en {{ cell }} no es correcto.",
+      "missingCandidate": "Tus notas en {{ cell }} no incluyen el dígito correcto.",
+      "contradiction": "Hay algo mal en el tablero: estos dígitos no pueden ser todos correctos."
+    }
+  }
+}

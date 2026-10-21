@@ -4,6 +4,7 @@ import { DestroyRef, DOCUMENT, inject, Injectable, InjectionToken } from '@angul
 export const STORAGE_KEYS = {
   game: 'advsudoku:v1:game',
   settings: 'advsudoku:v1:settings',
+  stats: 'advsudoku:v1:stats',
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];

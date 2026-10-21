@@ -36,7 +36,6 @@ export type PlayAction = 'undo' | 'redo' | 'erase' | 'notes' | 'hint';
         <span class="pill" aria-hidden="true">{{ 'play.actions.on' | transloco }}</span>
       }
     </button>
-    <!-- Hints arrive with the hints PR: it enables this button and handles 'hint'. -->
     <button type="button" [disabled]="!hintsEnabled()" (click)="action.emit('hint')">
       <app-icon name="lightbulb" [size]="22" />
       <span>{{ 'play.actions.hint' | transloco }}</span>

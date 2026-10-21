@@ -1,0 +1,91 @@
+{
+  "panel": {
+    "label": "Dica",
+    "eyebrow": "Dica {{ n }}",
+    "loading": "Procurando o próximo passo…",
+    "apply": "Aplicar",
+    "show": "Mostrar célula",
+    "close": "Fechar dica",
+    "place": "Colocar",
+    "eliminate": "Eliminar",
+    "none": "Nenhuma dica disponível: esta posição exige técnicas além das que eu conheço.",
+    "failed": "Não foi possível calcular uma dica. Tente de novo."
+  },
+  "unit": {
+    "row": {
+      "name": "linha {{ index }}",
+      "in": "na linha {{ index }}",
+      "of": "da linha {{ index }}"
+    },
+    "col": {
+      "name": "coluna {{ index }}",
+      "in": "na coluna {{ index }}",
+      "of": "da coluna {{ index }}"
+    },
+    "box": {
+      "name": "caixa {{ index }}",
+      "in": "na caixa {{ index }}",
+      "of": "da caixa {{ index }}"
+    }
+  },
+  "units": {
+    "row": { "in": "nas linhas {{ list }}", "of": "das linhas {{ list }}" },
+    "col": { "in": "nas colunas {{ list }}", "of": "das colunas {{ list }}" }
+  },
+  "technique": {
+    "fullHouse": {
+      "name": "Última vaga",
+      "explain": "{{ cell }} é a última célula vazia {{ inUnit }}, então só pode ser {{ digit }}."
+    },
+    "nakedSingle": {
+      "name": "Candidato único",
+      "explain": "{{ digit }} é o único candidato que sobrou em {{ cell }}."
+    },
+    "hiddenSingle": {
+      "name": "Único oculto",
+      "explain": "O {{ digit }} só cabe em uma célula {{ inUnit }}: {{ cell }}."
+    },
+    "pointing": {
+      "name": "Apontamento",
+      "explain": "Dentro da caixa {{ box }}, o {{ digit }} só pode ficar {{ inUnit }}, então ele pode ser removido do resto {{ ofUnit }}."
+    },
+    "boxLineReduction": {
+      "name": "Redução caixa/linha",
+      "explain": "Na {{ unitName }}, o {{ digit }} só pode ficar na caixa {{ box }}, então ele pode ser removido do resto da caixa {{ box }}."
+    },
+    "nakedPair": {
+      "name": "Par nu",
+      "explain": "{{ cells }} só podem conter {{ digits }}, então esses dígitos podem ser removidos das outras células {{ ofUnit }}."
+    },
+    "hiddenPair": {
+      "name": "Par oculto",
+      "explain": "{{ digits }} só cabem em {{ cells }} {{ inUnit }}, então essas células não podem conter nenhum outro dígito."
+    },
+    "nakedTriple": {
+      "name": "Trio nu",
+      "explain": "{{ cells }} só podem conter {{ digits }}, então esses dígitos podem ser removidos das outras células {{ ofUnit }}."
+    },
+    "hiddenTriple": {
+      "name": "Trio oculto",
+      "explain": "{{ digits }} só cabem em {{ cells }} {{ inUnit }}, então essas células não podem conter nenhum outro dígito."
+    },
+    "xWing": {
+      "name": "X-Wing",
+      "explain": "X-Wing no {{ digit }}: {{ inBases }}, ele só pode ficar {{ inCovers }}, então pode ser removido do resto {{ ofCovers }}."
+    },
+    "swordfish": {
+      "name": "Swordfish",
+      "explain": "Swordfish no {{ digit }}: {{ inBases }}, ele só pode ficar {{ inCovers }}, então pode ser removido do resto {{ ofCovers }}."
+    },
+    "xyWing": {
+      "name": "XY-Wing",
+      "explain": "{{ pivot }} é {{ x }} ou {{ y }}. Em qualquer caso, {{ pincer1 }} ou {{ pincer2 }} vira {{ z }}, então o {{ z }} pode ser removido de toda célula que enxerga as duas."
+    },
+    "mistake": {
+      "name": "Erro",
+      "wrongValue": "O dígito em {{ cell }} não está correto.",
+      "missingCandidate": "Suas anotações em {{ cell }} não incluem o dígito correto.",
+      "contradiction": "Há algo errado no tabuleiro: esses dígitos não podem estar todos certos."
+    }
+  }
+}
