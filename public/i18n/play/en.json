@@ -35,11 +35,5 @@
   "pause": {
     "resume": "Resume",
     "newGame": "New game"
-  },
-  "won": {
-    "title": "Solved.",
-    "time": "Solved in {{ time }}",
-    "newGame": "New game",
-    "home": "Home"
   }
 }
