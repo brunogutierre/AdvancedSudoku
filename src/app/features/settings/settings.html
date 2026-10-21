@@ -1,0 +1,172 @@
+<div class="page settings">
+  <h1 class="display page-title">{{ 'settings.title' | transloco }}</h1>
+
+  <section aria-labelledby="s-gameplay">
+    <h2 id="s-gameplay">{{ 'settings.sections.gameplay' | transloco }}</h2>
+    <div class="card">
+      <div class="row stack">
+        <div class="text">
+          <span>{{ 'settings.mistakeMode.label' | transloco }}</span>
+          <small>{{ 'settings.mistakeMode.help' | transloco }}</small>
+        </div>
+        <app-segmented
+          [label]="'settings.mistakeMode.label' | transloco"
+          [options]="[
+            { value: 'conflicts', label: 'settings.mistakeMode.conflicts' | transloco },
+            { value: 'solution', label: 'settings.mistakeMode.solution' | transloco },
+            { value: 'off', label: 'settings.mistakeMode.off' | transloco },
+          ]"
+          [value]="store.mistakeMode()"
+          (valueChange)="change('mistakeMode', $event)"
+        />
+      </div>
+      <div class="row">
+        <div class="text">
+          <span>{{ 'settings.autoCandidates.label' | transloco }}</span>
+          <small>{{ 'settings.autoCandidates.help' | transloco }}</small>
+        </div>
+        <button
+          app-switch
+          data-setting="autoCandidates"
+          [attr.aria-label]="'settings.autoCandidates.label' | transloco"
+          [checked]="store.autoCandidatesEasy()"
+          (checkedChange)="change('autoCandidatesEasy', $event)"
+        ></button>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-assistance">
+    <h2 id="s-assistance">{{ 'settings.sections.assistance' | transloco }}</h2>
+    <div class="card">
+      <div class="row">
+        <div class="text">
+          <span>{{ 'settings.highlightPeers.label' | transloco }}</span>
+          <small>{{ 'settings.highlightPeers.help' | transloco }}</small>
+        </div>
+        <button
+          app-switch
+          data-setting="highlightPeers"
+          [attr.aria-label]="'settings.highlightPeers.label' | transloco"
+          [checked]="store.highlightPeers()"
+          (checkedChange)="change('highlightPeers', $event)"
+        ></button>
+      </div>
+      <div class="row">
+        <div class="text">
+          <span>{{ 'settings.highlightSameDigit.label' | transloco }}</span>
+          <small>{{ 'settings.highlightSameDigit.help' | transloco }}</small>
+        </div>
+        <button
+          app-switch
+          data-setting="highlightSameDigit"
+          [attr.aria-label]="'settings.highlightSameDigit.label' | transloco"
+          [checked]="store.highlightSameDigit()"
+          (checkedChange)="change('highlightSameDigit', $event)"
+        ></button>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-feedback">
+    <h2 id="s-feedback">{{ 'settings.sections.feedback' | transloco }}</h2>
+    <div class="card">
+      <div class="row">
+        <div class="text">
+          <span>{{ 'settings.sound.label' | transloco }}</span>
+          <small>{{ 'settings.sound.help' | transloco }}</small>
+        </div>
+        <button
+          app-switch
+          data-setting="sound"
+          [attr.aria-label]="'settings.sound.label' | transloco"
+          [checked]="store.sound()"
+          (checkedChange)="change('sound', $event)"
+        ></button>
+      </div>
+      @if (canVibrate) {
+        <div class="row">
+          <div class="text">
+            <span>{{ 'settings.haptics.label' | transloco }}</span>
+            <small>{{ 'settings.haptics.help' | transloco }}</small>
+          </div>
+          <button
+            app-switch
+            data-setting="haptics"
+            [attr.aria-label]="'settings.haptics.label' | transloco"
+            [checked]="store.haptics()"
+            (checkedChange)="change('haptics', $event)"
+          ></button>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section aria-labelledby="s-appearance">
+    <h2 id="s-appearance">{{ 'settings.sections.appearance' | transloco }}</h2>
+    <div class="card">
+      <div class="row stack">
+        <div class="text">
+          <span>{{ 'settings.theme.label' | transloco }}</span>
+        </div>
+        <app-segmented
+          [label]="'settings.theme.label' | transloco"
+          [options]="[
+            { value: 'system', label: 'theme.system' | transloco },
+            { value: 'light', label: 'theme.light' | transloco },
+            { value: 'dark', label: 'theme.dark' | transloco },
+          ]"
+          [value]="store.theme()"
+          (valueChange)="change('theme', $event)"
+        />
+      </div>
+      <div class="row stack">
+        <div class="text">
+          <span>{{ 'settings.reducedMotion.label' | transloco }}</span>
+          <small>{{ 'settings.reducedMotion.help' | transloco }}</small>
+        </div>
+        <app-segmented
+          [label]="'settings.reducedMotion.label' | transloco"
+          [options]="[
+            { value: 'system', label: 'settings.reducedMotion.system' | transloco },
+            { value: 'on', label: 'settings.reducedMotion.on' | transloco },
+            { value: 'off', label: 'settings.reducedMotion.off' | transloco },
+          ]"
+          [value]="store.reducedMotion()"
+          (valueChange)="change('reducedMotion', $event)"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-language">
+    <h2 id="s-language">{{ 'settings.sections.language' | transloco }}</h2>
+    <div class="card">
+      <div class="row">
+        <div class="text">
+          <label for="lang-select">{{ 'settings.language.label' | transloco }}</label>
+          <small>{{ 'settings.language.help' | transloco }}</small>
+        </div>
+        <select
+          id="lang-select"
+          [value]="store.lang()"
+          (change)="change('lang', $any($event.target).value)"
+        >
+          @for (lang of langs; track lang.value) {
+            <option
+              [value]="lang.value"
+              [attr.lang]="lang.value"
+              [selected]="lang.value === store.lang()"
+            >
+              {{ lang.name }}
+            </option>
+          }
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <button app-button variant="ghost" type="button" class="reset" (click)="store.reset()">
+    {{ 'settings.reset' | transloco }}
+  </button>
+</div>

@@ -1,0 +1,71 @@
+.settings {
+  display: grid;
+  gap: var(--sp-5);
+  max-width: 640px;
+}
+
+section {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+h2 {
+  padding-inline: var(--sp-2);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+
+.card {
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  min-height: 56px;
+  padding: var(--sp-3) var(--sp-4);
+
+  & + & {
+    border-top: 1px solid var(--border);
+  }
+}
+
+.stack {
+  flex-wrap: wrap;
+}
+
+.text {
+  display: grid;
+  gap: 2px;
+  flex: 1 1 220px;
+
+  small {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+}
+
+select {
+  min-height: 44px;
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+}
+
+.reset {
+  justify-self: start;
+}
+
+@media (forced-colors: active) {
+  .card {
+    border: 1px solid CanvasText;
+  }
+}
