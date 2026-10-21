@@ -2,15 +2,22 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideTranslocoTesting } from '../../../testing/i18n';
 import homeEn from '../../../../public/i18n/home/en.json';
+import { APP_STORAGE, GameStore } from '../../core';
+import { MemoryStorage } from '../../core/testing/memory-storage';
+import { KNOWN_PUZZLES } from '../../engine/testing/fixtures';
 import { Home, dayPart } from './home';
 
 describe('Home', () => {
-  async function setup() {
-    localStorage.clear();
-    vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['en']);
+  async function setup(before?: () => void) {
+    vi.spyOn(navigator, 'language', 'get').mockReturnValue('en-US');
     TestBed.configureTestingModule({
-      providers: [provideTranslocoTesting({ 'home/en': homeEn }), provideRouter([])],
+      providers: [
+        provideTranslocoTesting({ 'home/en': homeEn }),
+        provideRouter([]),
+        { provide: APP_STORAGE, useValue: new MemoryStorage() },
+      ],
     });
+    before?.();
     const fixture = TestBed.createComponent(Home);
     fixture.autoDetectChanges();
     await fixture.whenStable();
@@ -64,5 +71,28 @@ describe('Home', () => {
     expect(document.activeElement).toBe(cards[0]);
     press(0, 'a');
     expect(document.activeElement).toBe(cards[0]);
+  });
+
+  it('hides the continue card without a game in progress', async () => {
+    const { root } = await setup();
+    expect(root.querySelector('app-continue-card')).toBeNull();
+  });
+
+  it('shows the saved game in a continue card linking to Play', async () => {
+    const wiki = KNOWN_PUZZLES[0];
+    const { root } = await setup(() => {
+      const store = TestBed.inject(GameStore);
+      store.newGame({ puzzle: wiki.puzzle, solution: wiki.solution, difficulty: 'hard' });
+      store.pause();
+    });
+    const card = root.querySelector('app-continue-card')!;
+    expect(root.querySelector('.grid')?.classList).toContain('has-continue');
+    expect(card.querySelector('.chip')?.textContent?.trim()).toBe('Hard');
+    expect(card.querySelector('.cells')?.textContent).toBe('30 of 81 cells');
+    expect(card.querySelector('text')?.textContent).toBe('0%');
+    expect(card.querySelector('.time')?.textContent).toBe('0:00');
+    const link = card.querySelector('a')!;
+    expect(link.getAttribute('href')).toBe('/play');
+    expect(link.getAttribute('aria-label')).toBe('Continue your Hard game');
   });
 });

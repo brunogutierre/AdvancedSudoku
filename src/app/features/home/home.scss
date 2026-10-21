@@ -133,6 +133,20 @@
   .new-game {
     grid-column: 1 / -1;
   }
+
+  .has-continue {
+    .hero {
+      grid-column: 1 / -1;
+    }
+
+    .continue {
+      grid-column: span 7;
+    }
+
+    .daily {
+      align-self: stretch;
+    }
+  }
 }
 
 @media (forced-colors: active) {

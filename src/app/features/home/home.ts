@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe, provideTranslocoScope } from '@jsverse/transloco';
+import { GameStore } from '../../core';
 import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
+import { ContinueCard } from './continue-card';
 
 /** Mirrors the engine's difficulty levels (the engine PR owns the canonical type). */
 export const HOME_DIFFICULTIES = ['easy', 'medium', 'hard', 'insane'] as const;
@@ -19,7 +21,7 @@ export function dayPart(hour: number): DayPart {
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, TranslocoPipe, Button],
+  imports: [RouterLink, TranslocoPipe, Button, ContinueCard],
   providers: [provideTranslocoScope('home')],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.html',
@@ -28,6 +30,21 @@ export function dayPart(hour: number): DayPart {
 export class Home {
   private readonly lang = inject(LanguageService).lang;
   private readonly now = new Date();
+  private readonly game = inject(GameStore);
+
+  /** The unfinished saved game, if any. */
+  protected readonly saved = computed(() => {
+    const status = this.game.status();
+    if (status !== 'playing' && status !== 'paused') {
+      return null;
+    }
+    return {
+      difficulty: this.game.difficulty(),
+      elapsedMs: this.game.elapsedMs(),
+      filled: this.game.digitCounts().reduce((sum, n) => sum + n, 0),
+      progress: this.game.progress(),
+    };
+  });
 
   protected readonly difficulties = HOME_DIFFICULTIES;
   protected readonly greetingKey = `home.greeting.${dayPart(this.now.getHours())}`;

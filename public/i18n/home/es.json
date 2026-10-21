@@ -8,5 +8,14 @@
   "newGame": "Nueva partida",
   "newGameLabel": "Nueva partida {{ difficulty }}",
   "noBest": "Aún sin mejor tiempo",
-  "daily": { "eyebrow": "Desafío diario", "cta": "Jugar hoy" }
+  "daily": {
+    "eyebrow": "Desafío diario",
+    "cta": "Jugar hoy"
+  },
+  "continue": {
+    "eyebrow": "Continuar",
+    "cells": "{{ filled }} de 81 casillas",
+    "cta": "Continuar",
+    "label": "Continuar tu partida {{ difficulty }}"
+  }
 }
