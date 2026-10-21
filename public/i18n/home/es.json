@@ -1,0 +1,12 @@
+{
+  "greeting": {
+    "morning": "Buenos días.",
+    "afternoon": "Buenas tardes.",
+    "evening": "Buenas noches."
+  },
+  "subtitle": "Un rompecabezas, pura lógica. Elige tu desafío.",
+  "newGame": "Nueva partida",
+  "newGameLabel": "Nueva partida {{ difficulty }}",
+  "noBest": "Aún sin mejor tiempo",
+  "daily": { "eyebrow": "Desafío diario", "cta": "Jugar hoy" }
+}

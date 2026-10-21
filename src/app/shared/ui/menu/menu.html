@@ -1,0 +1,31 @@
+<button
+  type="button"
+  class="trigger"
+  aria-haspopup="menu"
+  [attr.aria-label]="label()"
+  [attr.title]="label()"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="open() ? menuId : null"
+  (click)="toggle()"
+  (keydown.arrowDown)="$event.preventDefault(); show()"
+>
+  <ng-content />
+</button>
+@if (open()) {
+  <div class="menu" role="menu" [id]="menuId" [attr.aria-label]="label()">
+    @for (item of items(); track item.value) {
+      <button
+        type="button"
+        role="menuitemradio"
+        tabindex="-1"
+        [attr.aria-checked]="item.value === value()"
+        [attr.lang]="item.lang ?? null"
+        (click)="choose(item)"
+        (keydown)="onMenuKeydown($event)"
+      >
+        <app-icon name="check" [size]="18" class="tick" />
+        {{ item.label }}
+      </button>
+    }
+  </div>
+}

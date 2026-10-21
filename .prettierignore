@@ -1,2 +1,9 @@
+dist
+coverage
+.angular
+node_modules
+package-lock.json
+# Formatted by the Angular CLI; kept out of Prettier to avoid noisy reflows
+angular.json
 # Generated data
 public/puzzles/

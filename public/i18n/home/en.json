@@ -1,0 +1,12 @@
+{
+  "greeting": {
+    "morning": "Good morning.",
+    "afternoon": "Good afternoon.",
+    "evening": "Good evening."
+  },
+  "subtitle": "One puzzle, pure logic. Pick your challenge.",
+  "newGame": "New game",
+  "newGameLabel": "New {{ difficulty }} game",
+  "noBest": "No best time yet",
+  "daily": { "eyebrow": "Daily challenge", "cta": "Play today" }
+}
