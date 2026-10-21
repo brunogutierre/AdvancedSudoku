@@ -1,0 +1,24 @@
+{
+  "app": { "name": "Advanced Sudoku" },
+  "a11y": { "skipToContent": "Skip to content" },
+  "nav": {
+    "label": "Main",
+    "home": "Home",
+    "play": "Play",
+    "daily": "Daily",
+    "stats": "Stats",
+    "settings": "Settings",
+    "back": "Back"
+  },
+  "theme": {
+    "label": "Theme: {{ mode }}",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "language": { "label": "Language: {{ name }}" },
+  "difficulty": { "easy": "Easy", "medium": "Medium", "hard": "Hard", "insane": "Insane" },
+  "toast": { "dismiss": "Dismiss" },
+  "dialog": { "close": "Close" },
+  "common": { "loading": "Loading…" }
+}

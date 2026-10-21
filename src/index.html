@@ -2,10 +2,30 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>AdvancedSudoku</title>
+    <title>Advanced Sudoku</title>
     <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="A modern, minimalist Sudoku that teaches solving techniques."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e0f13" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!-- Apply the persisted theme before first paint (key must match ThemeService). -->
+    <script>
+      try {
+        var theme = localStorage.getItem('advsudoku:v1:theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..600;1,9..144,500..600&family=Inter:wght@400..700&display=swap"
+    />
   </head>
   <body>
     <app-root></app-root>

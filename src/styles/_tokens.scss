@@ -1,0 +1,167 @@
+// "Ink & Paper" design tokens. Colors use light-dark(): the active scheme comes from
+// `color-scheme`, which [data-theme] pins to light or dark (absent = follow the system).
+:root {
+  color-scheme: light dark;
+
+  /* surfaces & text */
+  --bg: light-dark(#f6f5f1, #0e0f13);
+  --surface: light-dark(#ffffff, #17181e);
+  --surface-2: light-dark(#efede7, #1f2028);
+  --surface-3: light-dark(#e6e3db, #272833);
+  --text: light-dark(#1b1a22, #ecebf3);
+  --text-muted: light-dark(#5f5d68, #a4a2b0);
+  --border: light-dark(#ddd9d0, #2c2d37);
+  --border-strong: light-dark(#8e8a99, #6e6b7d);
+  --scrim: light-dark(rgb(246 245 241 / 0.72), rgb(14 15 19 / 0.72));
+
+  /* accent */
+  --primary: light-dark(#4b44d6, #8f8aff);
+  --on-primary: light-dark(#ffffff, #0e0f13);
+  --primary-tint: light-dark(#ecebfc, #22213f);
+  --focus-ring: var(--primary);
+
+  /* status */
+  --danger: light-dark(#c42638, #ff6e7c);
+  --danger-tint: light-dark(#fce3e6, #3a1a22);
+  --success: light-dark(#13773a, #5bd98a);
+  --success-tint: light-dark(#d5f1df, #173826);
+  --flame: light-dark(#c2410c, #ff9a5c);
+
+  /* difficulty accents (text/icon) + tints (card/chip bg) */
+  --easy: light-dark(#0e7a69, #4fd1b6);
+  --easy-tint: light-dark(#e2f3ef, #142b27);
+  --medium: light-dark(#2160b8, #72aaff);
+  --medium-tint: light-dark(#e3ecf9, #172338);
+  --hard: light-dark(#9a5700, #f2b24e);
+  --hard-tint: light-dark(#fbeedc, #2e2414);
+  --insane: light-dark(#b3225c, #ff7daa);
+  --insane-tint: light-dark(#fbe4ec, #33182a);
+
+  /* board. Dark selected/same/note differ from the spec draft: the draft's selected and
+     same-digit tints were 1.17:1 apart; these are 1.40:1 apart with text still >= 4.5:1. */
+  --cell-bg: light-dark(#ffffff, #17181e);
+  --cell-given: light-dark(#1b1a22, #ecebf3);
+  --cell-user: light-dark(#4b44d6, #a9a5ff);
+  --cell-selected: light-dark(#dad8fb, #39358e);
+  --cell-peer: light-dark(#f0eff7, #1f2029);
+  --cell-same: light-dark(#d3d0fa, #272554);
+  --cell-conflict: var(--danger);
+  --cell-conflict-bg: var(--danger-tint);
+  --cell-note: light-dark(#5f5d68, #b4b2c0);
+  --cell-note-hit: var(--primary);
+  --cell-sweep: light-dark(#e2f4ea, #16301f);
+  --line-thin: light-dark(#e3e0ea, #272833);
+  --line-box: light-dark(#8e8a99, #6e6b7d);
+  --hint-place: var(--success);
+  --hint-place-bg: var(--success-tint);
+  --hint-elim: light-dark(#b4410b, #ff9a5c);
+  --hint-elim-bg: light-dark(#fde8d7, #3b2316);
+  --hint-unit: var(--primary);
+
+  /* type */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: clamp(1.25rem, 1rem + 1vw, 1.5rem);
+  --fs-2xl: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem);
+  --fs-hero: clamp(2.25rem, 1.4rem + 4vw, 3.75rem);
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --lh-tight: 1.1;
+  --lh-body: 1.5;
+  --tracking-tight: -0.02em;
+  --tracking-caps: 0.08em;
+
+  /* spacing (4px base) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --page-pad: clamp(16px, 4vw, 40px);
+  --content-max: 1120px;
+  --header-h: 64px;
+  --tabbar-h: 64px;
+
+  /* radii */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-full: 999px;
+
+  /* elevation: light-dark() does not accept shadow lists everywhere, so dark shadows
+     are swapped in by the [data-theme] / prefers-color-scheme blocks below. */
+  --shadow-1: 0 1px 2px rgb(27 26 34 / 0.06), 0 0 0 1px rgb(255 255 255 / 0.04);
+  --shadow-2: 0 2px 4px rgb(27 26 34 / 0.05), 0 8px 24px rgb(27 26 34 / 0.08);
+  --shadow-3: 0 4px 8px rgb(27 26 34 / 0.06), 0 24px 48px rgb(27 26 34 / 0.16);
+
+  /* motion */
+  --dur-1: 90ms;
+  --dur-2: 160ms;
+  --dur-3: 240ms;
+  --dur-4: 360ms;
+  --dur-5: 600ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: linear(0, 0.5 7%, 1.06 18%, 1.02 26%, 0.99 40%, 1);
+}
+
+@mixin dark-shadows {
+  --shadow-1: 0 0 0 1px var(--border);
+  --shadow-2: 0 0 0 1px var(--border), 0 12px 32px rgb(0 0 0 / 0.45);
+  --shadow-3: 0 0 0 1px var(--border), 0 24px 48px rgb(0 0 0 / 0.55);
+}
+
+@mixin instant-motion {
+  --dur-1: 0ms;
+  --dur-2: 0ms;
+  --dur-3: 0ms;
+  --dur-4: 0ms;
+  --dur-5: 0ms;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  @include dark-shadows;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include dark-shadows;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) {
+    @include instant-motion;
+  }
+}
+
+:root[data-motion='reduced'] {
+  @include instant-motion;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --line-thin: var(--border-strong);
+    --border: var(--border-strong);
+  }
+}
+
+$bp-sm: 600px;
+$bp-md: 900px;
+$bp-lg: 1200px;
