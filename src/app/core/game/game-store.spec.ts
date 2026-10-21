@@ -197,4 +197,78 @@ describe('GameStore', () => {
     );
     expect(store.state()).toMatchObject({ hintsUsed: 3, selected: 40 });
   });
+
+  it('detects the win, stops the clock and freezes the board', () => {
+    vi.useFakeTimers();
+    const { store } = setup();
+    store.newGame(almostDone);
+    store.select(R1C3);
+    store.input(4);
+    store.select(80);
+    store.input(9);
+    expect(store.status()).toBe('won');
+    expect(store.isWon()).toBe(true);
+    const elapsed = store.elapsedMs();
+    vi.advanceTimersByTime(5000);
+    expect(store.elapsedMs()).toBe(elapsed);
+    store.erase();
+    store.undo();
+    expect(store.state().values[80]).toBe(9);
+  });
+
+  it('wins through redo too', () => {
+    const { store } = setup();
+    store.newGame({ ...almostDone, puzzle: wiki.solution.slice(0, 80) + '.' });
+    store.select(80);
+    store.input(1);
+    store.input(9);
+    expect(store.status()).toBe('won');
+  });
+
+  it('runs the clock only while playing and pauses when the page is hidden', () => {
+    vi.useFakeTimers();
+    const { store } = setup();
+    store.newGame(medium);
+    vi.advanceTimersByTime(3000);
+    expect(store.elapsedMs()).toBe(3000);
+    store.pause();
+    vi.advanceTimersByTime(5000);
+    expect(store.elapsedMs()).toBe(3000);
+    store.select(R1C3);
+    store.input(4);
+    expect(store.state().values[R1C3]).toBe(0);
+    store.resume();
+    vi.advanceTimersByTime(1500);
+    expect(store.elapsedMs()).toBe(4000);
+
+    const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden');
+    document.dispatchEvent(new Event('visibilitychange'));
+    expect(store.status()).toBe('paused');
+    expect(store.elapsedMs()).toBe(4500);
+    visibility.mockRestore();
+  });
+
+  it('persists the game and restores it paused', () => {
+    vi.useFakeTimers();
+    const { store, storage } = setup();
+    store.newGame(medium);
+    store.select(R1C3);
+    store.input(4);
+    vi.advanceTimersByTime(2000);
+    TestBed.tick();
+    vi.advanceTimersByTime(1000);
+    expect(storage.getItem(STORAGE_KEYS.game)).not.toBeNull();
+
+    TestBed.resetTestingModule();
+    const restored = setup(storage).store;
+    expect(restored.status()).toBe('paused');
+    expect(restored.state().values[R1C3]).toBe(4);
+    expect(restored.elapsedMs()).toBeGreaterThanOrEqual(2000);
+  });
+
+  it('starts idle when the saved game is corrupt', () => {
+    const storage = new MemoryStorage();
+    storage.setItem(STORAGE_KEYS.game, JSON.stringify({ puzzle: 'nope' }));
+    expect(setup(storage).store.status()).toBe('idle');
+  });
 });
