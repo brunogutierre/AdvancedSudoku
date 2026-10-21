@@ -1,0 +1,61 @@
+<div class="page grid">
+  <header class="hero">
+    <p class="eyebrow">{{ today() }}</p>
+    <h1 class="display">{{ greetingKey | transloco }}</h1>
+    <p class="sub">{{ 'home.subtitle' | transloco }}</p>
+  </header>
+
+  <!-- The "Continue" card (7 columns) joins here once saved games exist. -->
+
+  <section class="daily" aria-labelledby="daily-title">
+    <p class="eyebrow" id="daily-title">{{ 'home.daily.eyebrow' | transloco }}</p>
+    <p class="display date">{{ todayShort() }}</p>
+    <a app-button routerLink="/daily">{{ 'home.daily.cta' | transloco }}</a>
+  </section>
+
+  <section class="new-game" aria-labelledby="new-game-title">
+    <h2 id="new-game-title">{{ 'home.newGame' | transloco }}</h2>
+    <ul role="list">
+      @for (difficulty of difficulties; track difficulty; let i = $index) {
+        <li>
+          <a
+            class="difficulty"
+            [attr.data-difficulty]="difficulty"
+            routerLink="/play"
+            [queryParams]="{ difficulty }"
+            [tabIndex]="i === 0 ? 0 : -1"
+            [attr.aria-label]="
+              'home.newGameLabel'
+                | transloco: { difficulty: ('difficulty.' + difficulty | transloco) }
+            "
+            (keydown)="onCardKeydown($event, i)"
+          >
+            <svg class="glyph" viewBox="0 0 28 28" width="28" height="28" aria-hidden="true">
+              @switch (difficulty) {
+                @case ('easy') {
+                  <circle cx="14" cy="14" r="5" />
+                }
+                @case ('medium') {
+                  <circle cx="8" cy="14" r="4.5" />
+                  <circle cx="20" cy="14" r="4.5" />
+                }
+                @case ('hard') {
+                  <circle cx="14" cy="7" r="4" />
+                  <circle cx="7" cy="20" r="4" />
+                  <circle cx="21" cy="20" r="4" />
+                }
+                @default {
+                  <path
+                    d="M14 2c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12 6.5-1 11-5.5 12-12Z"
+                  />
+                }
+              }
+            </svg>
+            <span class="name">{{ 'difficulty.' + difficulty | transloco }}</span>
+            <span class="best tnum">{{ 'home.noBest' | transloco }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </section>
+</div>
