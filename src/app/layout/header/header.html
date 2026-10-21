@@ -1,0 +1,67 @@
+<div class="bar">
+  <div class="start">
+    @if (onPlay()) {
+      <a
+        app-button
+        variant="icon"
+        class="back"
+        routerLink="/"
+        [attr.aria-label]="'nav.back' | transloco"
+      >
+        <app-icon name="chevron-left" />
+      </a>
+    }
+    <a class="wordmark" routerLink="/" [attr.aria-label]="'app.name' | transloco">
+      <span class="logo" aria-hidden="true">
+        @for (dot of [0, 1, 2, 3, 4, 5, 6, 7, 8]; track dot) {
+          <i></i>
+        }
+      </span>
+      <span class="word">Advanced</span><span class="accent display">Sudoku</span>
+    </a>
+  </div>
+
+  <nav class="tabs" [attr.aria-label]="'nav.label' | transloco">
+    <ul role="list">
+      @for (item of nav; track item.path) {
+        <li>
+          <a [routerLink]="item.path" [attr.aria-current]="isActive(item.path) ? 'page' : null">
+            {{ item.labelKey | transloco }}
+            @if (isActive(item.path)) {
+              <span class="indicator" aria-hidden="true"></span>
+            }
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <div class="actions">
+    <app-menu
+      [label]="'language.label' | transloco: { name: langLabel().name }"
+      [items]="langItems"
+      [value]="lang()"
+      (selected)="setLang($event)"
+    >
+      <app-icon name="globe" />
+      <span>{{ langLabel().short }}</span>
+    </app-menu>
+    <app-menu
+      #themeMenu
+      [label]="'theme.label' | transloco: { mode: ('theme.' + themeMode() | transloco) }"
+      [items]="themeItems()"
+      [value]="themeMode()"
+      (selected)="setTheme($event)"
+    >
+      <app-icon [name]="themeIcon()" />
+    </app-menu>
+    <a
+      app-button
+      variant="icon"
+      routerLink="/settings"
+      [attr.aria-label]="'nav.settings' | transloco"
+    >
+      <app-icon name="settings" />
+    </a>
+  </div>
+</div>

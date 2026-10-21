@@ -1,0 +1,62 @@
+dialog {
+  width: min(440px, calc(100vw - 2 * var(--sp-4)));
+  max-height: calc(100dvh - 2 * var(--sp-4));
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-3);
+
+  &::backdrop {
+    background: var(--scrim);
+    backdrop-filter: blur(4px);
+  }
+
+  &[open] {
+    animation: rise var(--dur-3) var(--ease-out);
+  }
+}
+
+.frame {
+  display: grid;
+  gap: var(--sp-4);
+  padding: var(--sp-5);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin: calc(-1 * var(--sp-2)) calc(-1 * var(--sp-2)) 0 0;
+}
+
+h2 {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+}
+
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--sp-3);
+
+  &:empty {
+    display: none;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}
+
+@media (forced-colors: active) {
+  dialog {
+    border: 1px solid CanvasText;
+  }
+}
