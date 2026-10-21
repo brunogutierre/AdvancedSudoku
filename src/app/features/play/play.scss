@@ -22,8 +22,11 @@
   width: var(--board-size);
 }
 
-.controls {
-  margin-top: auto;
+// Phones: the toolbar + board group is centered in the space left above the controls,
+// which stay at the bottom for thumb reach.
+.game {
+  flex: 1;
+  justify-content: center;
 }
 
 .stage {
@@ -35,6 +38,24 @@
 
   &.dimmed app-board {
     opacity: 0.85;
+  }
+
+  &.shake app-board {
+    animation: shake 360ms var(--ease-out) 120ms;
+  }
+}
+
+@keyframes shake {
+  25% {
+    transform: translateX(-6px);
+  }
+
+  50% {
+    transform: translateX(6px);
+  }
+
+  75% {
+    transform: translateX(-3px);
   }
 }
 
@@ -108,21 +129,6 @@
   }
 }
 
-.won {
-  background: color-mix(in srgb, var(--surface) 90%, transparent);
-
-  h2 {
-    font-size: var(--fs-2xl);
-  }
-
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--sp-3);
-  }
-}
-
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -136,17 +142,30 @@
 
   .play {
     display: grid;
-    grid-template-columns: var(--board-size) minmax(280px, 360px);
+    grid-template-columns: var(--board-size) minmax(300px, 380px);
     justify-content: center;
-    align-items: center;
+    align-content: center;
+    align-items: start;
     gap: var(--sp-7);
     min-height: calc(100dvh - 65px);
     padding-block: var(--sp-4);
   }
 
+  .game {
+    flex: none;
+  }
+
+  // Side panel: a card aligned with the board's top and bottom edges (below the toolbar),
+  // with the pad on top, the actions under it and the rest reserved for the hint panel.
   .controls {
     width: auto;
-    margin-top: 0;
+    height: var(--board-size);
+    margin-top: calc(44px + var(--sp-3));
+    padding: var(--sp-5);
+    gap: var(--sp-4);
+    border-radius: var(--r-xl);
+    background: var(--surface);
+    box-shadow: var(--shadow-1);
   }
 
   app-number-pad {
@@ -159,5 +178,7 @@
 
   .assist {
     order: 3;
+    flex: 1;
+    min-height: 0;
   }
 }

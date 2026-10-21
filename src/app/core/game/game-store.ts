@@ -223,6 +223,17 @@ export class GameStore {
     this.commit('hint', draft, { ...counters, selected: focus });
   }
 
+  /**
+   * Applies several engine steps as one undoable command and marks the game as assisted,
+   * without counting hints (used by the Konami easter egg).
+   */
+  assist(steps: readonly Step[]): void {
+    if (this.status() !== 'playing' || steps.length === 0) return;
+    const draft = this.draft();
+    for (const step of steps) draft.applyStep(step);
+    this.commit('hint', draft, { assisted: true });
+  }
+
   undo(): void {
     const { undo, redo } = this._history();
     const command = undo.at(-1);

@@ -12,21 +12,25 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoPipe, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
 import { GameStore, SettingsStore, StatsStore } from '../../core';
 import type { Difficulty } from '../../core';
 import { ToastService } from '../../core/toast/toast.service';
 import type { Step } from '../../engine';
 import { EngineClient } from '../../engine-worker/engine-client';
-import { formatDuration } from '../../shared/format/time';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
 import { Skeleton } from '../../shared/ui/skeleton/skeleton';
 import { ActionBar, PlayAction } from './action-bar/action-bar';
 import { Board } from './board/board';
+import { Completion } from './completion/completion';
 import { navigate } from './board/board-nav';
 import { GAME_WON_HANDLERS } from './game-events';
+import { ComboBanner } from './combo-banner/combo-banner';
+import { Confetti } from './completion/confetti';
+import { connectKonami, createComboBreaker } from './feel/combo';
+import { connectFeel } from './feel/connect-feel';
 import { HintPanel } from './hints/hint-panel';
 import { overlayFromStep } from './hints/hint-view';
 import { NumberPad } from './number-pad/number-pad';
@@ -54,13 +58,15 @@ const OWN_KEYS = '[role="menu"], input, textarea, select, dialog';
 @Component({
   selector: 'app-play',
   imports: [
-    RouterLink,
     TranslocoPipe,
     Button,
     Icon,
     Skeleton,
     ActionBar,
     Board,
+    ComboBanner,
+    Completion,
+    Confetti,
     NumberPad,
     PlayToolbar,
     RadialPicker,
@@ -94,9 +100,11 @@ export class Play implements OnInit {
   protected readonly failed = signal(false);
   protected readonly paused = computed(() => this.store.status() === 'paused');
   protected readonly playing = computed(() => this.store.status() === 'playing');
-  protected readonly finalTime = computed(() => formatDuration(this.store.elapsedMs()));
   protected readonly boxes = Array.from({ length: 9 }, (_, i) => i);
   protected readonly radial = signal<RadialAnchor | null>(null);
+  /** Konami code easter egg in progress. */
+  protected readonly combo = signal(false);
+  private readonly comboBreaker = createComboBreaker();
   private request = 0;
   private lastRequest: StartRequest = { tier: 'easy' };
 
@@ -110,6 +118,13 @@ export class Play implements OnInit {
   private hintRequest = 0;
 
   constructor() {
+    connectFeel(this.board);
+    connectKonami(() => {
+      if (this.playing() && !this.combo()) {
+        this.combo.set(true);
+        this.comboBreaker();
+      }
+    });
     let previous = this.store.status();
     effect(() => {
       const status = this.store.status();
