@@ -66,6 +66,8 @@
             [elapsedMs]="store.elapsedMs()"
             [mistakes]="store.mistakes()"
             [hintsUsed]="store.hintsUsed()"
+            [personalBest]="completionInfo().personalBest"
+            [dailyStreak]="completionInfo().dailyStreak"
             (newGame)="newGame()"
           />
         }

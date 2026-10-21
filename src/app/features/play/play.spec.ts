@@ -3,11 +3,13 @@ import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { provideTranslocoTesting } from '../../../testing/i18n';
+import completionEn from '../../../../public/i18n/completion/en.json';
 import playEn from '../../../../public/i18n/play/en.json';
 import hintsEn from '../../../../public/i18n/hints/en.json';
 import { ToastService } from '../../core/toast/toast.service';
 import type { Step } from '../../engine';
 import { APP_STORAGE, GameStore, StatsStore } from '../../core';
+import type { GameState } from '../../core';
 import { MemoryStorage } from '../../core/testing/memory-storage';
 import type { GeneratedPuzzle } from '../../engine';
 import { KNOWN_PUZZLES } from '../../engine/testing/fixtures';
@@ -54,7 +56,11 @@ describe('Play', () => {
     daily = vi.fn().mockResolvedValue({ ...generated, tier: 'hard', seed: 'daily:v1:2026-10-21' });
     TestBed.configureTestingModule({
       providers: [
-        provideTranslocoTesting({ 'play/en': playEn, 'hints/en': hintsEn }),
+        provideTranslocoTesting({
+          'play/en': playEn,
+          'hints/en': hintsEn,
+          'completion/en': completionEn,
+        }),
         provideRouter(
           [
             { path: 'play', component: Play },
@@ -225,6 +231,20 @@ describe('Play', () => {
     await harness.fixture.whenStable();
     expect(generate).toHaveBeenLastCalledWith('medium');
     expect(store.status()).toBe('playing');
+  });
+
+  it('compares with the previous best before the win is recorded', async () => {
+    const stats = TestBed.inject(StatsStore);
+    const store = TestBed.inject(GameStore);
+    stats.recordWin({ ...store.state(), difficulty: 'medium', elapsedMs: 3_600_000 });
+    onWon.mockImplementation((game: GameState) => stats.recordWin(game));
+    generate.mockResolvedValueOnce(almostSolved);
+    const { harness, root, press } = await open('/play?difficulty=medium');
+    store.select(2);
+    await press({ code: 'Digit4', key: '4' });
+    harness.detectChanges();
+    expect(root.querySelector('app-completion .badge')?.textContent).toContain('New best');
+    expect(stats.data().perDifficulty.medium.won).toBe(2);
   });
 
   it('opens the radial picker with Space, right-click, and fills candidates with A', async () => {

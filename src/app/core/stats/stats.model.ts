@@ -77,8 +77,16 @@ export function withStart(data: StatsData, difficulty: Difficulty): StatsData {
   };
 }
 
+/** Wins with hints, auto-candidates or the Konami combo do not count for times. */
+export function isAssisted(game: Pick<GameState, 'assisted' | 'hintsUsed'>): boolean {
+  return game.assisted || game.hintsUsed > 0;
+}
+
 export function withWin(data: StatsData, game: GameState, finishedAt: Date): StatsData {
-  const { difficulty, elapsedMs, assisted } = game;
+  const { difficulty, elapsedMs } = game;
+  // Hints always set `assisted`; checking hintsUsed too keeps the rule explicit and robust
+  // to older saved games. Assisted wins never count for best or average times.
+  const assisted = isAssisted(game);
   const record: GameRecord = {
     difficulty,
     mode: game.mode,

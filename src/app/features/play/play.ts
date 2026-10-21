@@ -25,6 +25,12 @@ import { Skeleton } from '../../shared/ui/skeleton/skeleton';
 import { ActionBar, PlayAction } from './action-bar/action-bar';
 import { Board } from './board/board';
 import { Completion } from './completion/completion';
+import {
+  CompletionInfo,
+  NO_COMPLETION_INFO,
+  dailyStreakAfterWin,
+  isNewBest,
+} from './completion/completion-info';
 import { navigate } from './board/board-nav';
 import { GAME_WON_HANDLERS } from './game-events';
 import { ComboBanner } from './combo-banner/combo-banner';
@@ -102,6 +108,8 @@ export class Play implements OnInit {
   protected readonly playing = computed(() => this.store.status() === 'playing');
   protected readonly boxes = Array.from({ length: 9 }, (_, i) => i);
   protected readonly radial = signal<RadialAnchor | null>(null);
+  /** Extra facts for the completion screen of a win made during this session. */
+  protected readonly completionInfo = signal<CompletionInfo>(NO_COMPLETION_INFO);
   /** Konami code easter egg in progress. */
   protected readonly combo = signal(false);
   private readonly comboBreaker = createComboBreaker();
@@ -129,8 +137,16 @@ export class Play implements OnInit {
     effect(() => {
       const status = this.store.status();
       if (status === 'won' && previous === 'playing') {
-        const game = untracked(this.store.state);
-        this.wonHandlers.forEach((handler) => handler(game));
+        untracked(() => {
+          const game = this.store.state();
+          // Order matters: compare with the previous best, record the win, then read the streak.
+          const personalBest = isNewBest(this.stats.data(), game);
+          this.wonHandlers.forEach((handler) => handler(game));
+          this.completionInfo.set({
+            personalBest,
+            dailyStreak: dailyStreakAfterWin(this.stats.data(), game),
+          });
+        });
       }
       previous = status;
     });
