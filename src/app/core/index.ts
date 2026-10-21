@@ -5,3 +5,5 @@ export type { BoardSnapshot, CellViewOptions } from './game/game-selectors';
 export * from './settings/settings.model';
 export * from './settings/settings-store';
 export { APP_STORAGE, STORAGE_KEYS } from './persistence/persistence.service';
+export * from './stats/stats.model';
+export * from './stats/stats-store';
