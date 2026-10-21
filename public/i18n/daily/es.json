@@ -1,1 +1,21 @@
-{ "title": "Desafío diario" }
+{
+  "title": "Desafío diario",
+  "streak": "Racha: {{ count }}",
+  "week": {
+    "label": "Semana",
+    "previous": "Semana anterior",
+    "next": "Semana siguiente"
+  },
+  "state": {
+    "done": "resuelto",
+    "missed": "perdido",
+    "today": "hoy",
+    "future": "aún no disponible"
+  },
+  "play": "Jugar",
+  "continue": "Continuar",
+  "solvedIn": "Resuelto en {{ time }}",
+  "missed": "Perdido. Solo se puede jugar el desafío de hoy.",
+  "best": "Tu mejor tiempo diario: {{ time }}",
+  "rotation": "Fácil los lunes y jueves, Medio los martes y viernes, Difícil los miércoles y fines de semana. Todos reciben el mismo sudoku cada día."
+}
