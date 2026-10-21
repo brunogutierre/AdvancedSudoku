@@ -10,12 +10,22 @@
   "noBest": "Pas encore de meilleur temps",
   "daily": {
     "eyebrow": "Défi quotidien",
-    "cta": "Jouer aujourd’hui"
+    "cta": "Jouer aujourd’hui",
+    "streak": "Série : {{ count }}",
+    "done": "Résolu en {{ time }}"
   },
   "continue": {
     "eyebrow": "Reprendre",
     "cells": "{{ filled }} cases sur 81",
     "cta": "Reprendre",
     "label": "Reprendre votre partie {{ difficulty }}"
+  },
+  "best": "Record {{ time }}",
+  "quick": {
+    "label": "Vos statistiques",
+    "won": "Parties gagnées",
+    "streak": "Meilleure série",
+    "average": "Temps moyen",
+    "none": "–"
   }
 }

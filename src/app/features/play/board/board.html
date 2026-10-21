@@ -38,6 +38,9 @@
           [class.box-end-row]="cell.row === 2 || cell.row === 5"
           [class.last-col]="cell.col === 8"
           [class.last-row]="cell.row === 8"
+          [class.hint-place]="vm.ghost !== 0"
+          [class.hint-pattern]="vm.pattern"
+          [class.hint-mistake]="vm.mistake"
           (click)="cellSelect.emit(cell.index)"
           (keydown.enter)="cellSelect.emit(cell.index)"
           (focus)="onFocus(cell)"
@@ -47,10 +50,14 @@
           @if (!concealed()) {
             @if (cell.value) {
               <span class="digit" aria-hidden="true">{{ cell.value }}</span>
-            } @else if (cell.notes) {
+            } @else if (vm.ghost) {
+              <span class="digit ghost" aria-hidden="true">{{ vm.ghost }}</span>
+            } @else if (vm.slots.length) {
               <span class="notes" aria-hidden="true">
                 @for (slot of vm.slots; track $index) {
-                  <span [class.hit]="slot < 0">{{ slot ? (slot < 0 ? -slot : slot) : '' }}</span>
+                  <span [class.hit]="slot.hit" [class.elim]="slot.elim">{{
+                    slot.digit || ''
+                  }}</span>
                 }
               </span>
             }
@@ -58,5 +65,15 @@
         </div>
       }
     </div>
+  }
+  @for (unit of unitFrames(); track $index) {
+    <span
+      class="hint-unit"
+      aria-hidden="true"
+      [style.top.%]="unit.top"
+      [style.left.%]="unit.left"
+      [style.width.%]="unit.width"
+      [style.height.%]="unit.height"
+    ></span>
   }
 </div>

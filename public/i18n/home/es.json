@@ -10,12 +10,22 @@
   "noBest": "Aún sin mejor tiempo",
   "daily": {
     "eyebrow": "Desafío diario",
-    "cta": "Jugar hoy"
+    "cta": "Jugar hoy",
+    "streak": "Racha: {{ count }}",
+    "done": "Resuelto en {{ time }}"
   },
   "continue": {
     "eyebrow": "Continuar",
     "cells": "{{ filled }} de 81 casillas",
     "cta": "Continuar",
     "label": "Continuar tu partida {{ difficulty }}"
+  },
+  "best": "Mejor {{ time }}",
+  "quick": {
+    "label": "Tus estadísticas",
+    "won": "Partidas ganadas",
+    "streak": "Mejor racha",
+    "average": "Tiempo medio",
+    "none": "–"
   }
 }

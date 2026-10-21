@@ -1,0 +1,83 @@
+{
+  "panel": {
+    "label": "Hint",
+    "eyebrow": "Hint {{ n }}",
+    "loading": "Looking for the next step…",
+    "apply": "Apply",
+    "show": "Show cell",
+    "close": "Close hint",
+    "place": "Place",
+    "eliminate": "Eliminate",
+    "none": "No hint available: this position needs techniques beyond the ones I know.",
+    "failed": "Couldn't compute a hint. Try again."
+  },
+  "unit": {
+    "row": { "name": "row {{ index }}", "in": "in row {{ index }}", "of": "of row {{ index }}" },
+    "col": {
+      "name": "column {{ index }}",
+      "in": "in column {{ index }}",
+      "of": "of column {{ index }}"
+    },
+    "box": { "name": "box {{ index }}", "in": "in box {{ index }}", "of": "of box {{ index }}" }
+  },
+  "units": {
+    "row": { "in": "in rows {{ list }}", "of": "of rows {{ list }}" },
+    "col": { "in": "in columns {{ list }}", "of": "of columns {{ list }}" }
+  },
+  "technique": {
+    "fullHouse": {
+      "name": "Full House",
+      "explain": "{{ cell }} is the last empty cell {{ inUnit }}, so it must be {{ digit }}."
+    },
+    "nakedSingle": {
+      "name": "Naked Single",
+      "explain": "{{ digit }} is the only candidate left in {{ cell }}."
+    },
+    "hiddenSingle": {
+      "name": "Hidden Single",
+      "explain": "{{ digit }} fits in only one cell {{ inUnit }}: {{ cell }}."
+    },
+    "pointing": {
+      "name": "Pointing",
+      "explain": "Within box {{ box }}, {{ digit }} can only go {{ inUnit }}, so it can be removed from the rest {{ ofUnit }}."
+    },
+    "boxLineReduction": {
+      "name": "Box/Line Reduction",
+      "explain": "Within {{ unitName }}, {{ digit }} can only go in box {{ box }}, so it can be removed from the rest of box {{ box }}."
+    },
+    "nakedPair": {
+      "name": "Naked Pair",
+      "explain": "{{ cells }} can only hold {{ digits }}, so those digits can be removed from the other cells {{ ofUnit }}."
+    },
+    "hiddenPair": {
+      "name": "Hidden Pair",
+      "explain": "{{ digits }} fit only in {{ cells }} {{ inUnit }}, so those cells can't hold any other digit."
+    },
+    "nakedTriple": {
+      "name": "Naked Triple",
+      "explain": "{{ cells }} can only hold {{ digits }}, so those digits can be removed from the other cells {{ ofUnit }}."
+    },
+    "hiddenTriple": {
+      "name": "Hidden Triple",
+      "explain": "{{ digits }} fit only in {{ cells }} {{ inUnit }}, so those cells can't hold any other digit."
+    },
+    "xWing": {
+      "name": "X-Wing",
+      "explain": "X-Wing on {{ digit }}: {{ inBases }}, it can only go {{ inCovers }}, so it can be removed from the rest {{ ofCovers }}."
+    },
+    "swordfish": {
+      "name": "Swordfish",
+      "explain": "Swordfish on {{ digit }}: {{ inBases }}, it can only go {{ inCovers }}, so it can be removed from the rest {{ ofCovers }}."
+    },
+    "xyWing": {
+      "name": "XY-Wing",
+      "explain": "{{ pivot }} is {{ x }} or {{ y }}. Either way, {{ pincer1 }} or {{ pincer2 }} becomes {{ z }}, so {{ z }} can be removed from every cell that sees both of them."
+    },
+    "mistake": {
+      "name": "Mistake",
+      "wrongValue": "The digit in {{ cell }} is not correct.",
+      "missingCandidate": "Your notes in {{ cell }} are missing the correct digit.",
+      "contradiction": "Something on the board is wrong: these digits can't all be right."
+    }
+  }
+}

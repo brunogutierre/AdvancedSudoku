@@ -4,7 +4,10 @@ import { Router, provideRouter, withComponentInputBinding } from '@angular/route
 import { RouterTestingHarness } from '@angular/router/testing';
 import { provideTranslocoTesting } from '../../../testing/i18n';
 import playEn from '../../../../public/i18n/play/en.json';
-import { APP_STORAGE, GameStore } from '../../core';
+import hintsEn from '../../../../public/i18n/hints/en.json';
+import { ToastService } from '../../core/toast/toast.service';
+import type { Step } from '../../engine';
+import { APP_STORAGE, GameStore, StatsStore } from '../../core';
 import { MemoryStorage } from '../../core/testing/memory-storage';
 import type { GeneratedPuzzle } from '../../engine';
 import { KNOWN_PUZZLES } from '../../engine/testing/fixtures';
@@ -28,16 +31,30 @@ const almostSolved: GeneratedPuzzle = {
   puzzle: wiki.solution.slice(0, 2) + '.' + wiki.solution.slice(3),
 };
 
+/** R1C3 must be 4 in the Wikipedia puzzle. */
+const hiddenSingle: Step = {
+  technique: 'hiddenSingle',
+  placements: [{ cell: 2, digit: 4 }],
+  eliminations: [],
+  highlights: { cells: [2], units: [{ type: 'row', index: 0 }], digits: [4] },
+  explainKey: 'technique.hiddenSingle.explain',
+  params: { cell: 'R1C3', digit: 4, unit: 'row', unitIndex: 1 },
+};
+
 describe('Play', () => {
   let generate: ReturnType<typeof vi.fn>;
   let onWon: ReturnType<typeof vi.fn>;
+  let hint: ReturnType<typeof vi.fn>;
+  let daily: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     generate = vi.fn().mockResolvedValue(generated);
     onWon = vi.fn();
+    hint = vi.fn().mockResolvedValue(hiddenSingle);
+    daily = vi.fn().mockResolvedValue({ ...generated, tier: 'hard', seed: 'daily:v1:2026-10-21' });
     TestBed.configureTestingModule({
       providers: [
-        provideTranslocoTesting({ 'play/en': playEn }),
+        provideTranslocoTesting({ 'play/en': playEn, 'hints/en': hintsEn }),
         provideRouter(
           [
             { path: 'play', component: Play },
@@ -46,7 +63,7 @@ describe('Play', () => {
           withComponentInputBinding(),
         ),
         { provide: APP_STORAGE, useValue: new MemoryStorage() },
-        { provide: EngineClient, useValue: { generate } },
+        { provide: EngineClient, useValue: { generate, hint, daily } },
         { provide: GAME_WON_HANDLERS, useValue: onWon, multi: true },
       ],
     });
@@ -263,5 +280,123 @@ describe('Play', () => {
     const { harness, store } = await open('/play?difficulty=medium');
     await harness.navigateByUrl('/');
     expect(store.status()).toBe('paused');
+  });
+
+  describe('daily', () => {
+    it('starts the daily puzzle of a date and records the start', async () => {
+      const { store } = await open('/play?daily=2026-10-21');
+      expect(daily).toHaveBeenCalledWith('2026-10-21');
+      expect(generate).not.toHaveBeenCalled();
+      expect(store.state()).toMatchObject({
+        mode: 'daily',
+        dailyDate: '2026-10-21',
+        difficulty: 'hard',
+        status: 'playing',
+      });
+      expect(TestBed.inject(StatsStore).data().perDifficulty.hard.started).toBe(1);
+      expect(TestBed.inject(Router).url).toBe('/play');
+    });
+
+    it("resumes today's unfinished daily instead of regenerating it", async () => {
+      const store = TestBed.inject(GameStore);
+      store.newGame({ ...generated, difficulty: 'hard', mode: 'daily', dailyDate: '2026-10-21' });
+      store.pause();
+      await open('/play?daily=2026-10-21');
+      expect(daily).not.toHaveBeenCalled();
+      expect(store.status()).toBe('playing');
+      expect(TestBed.inject(Router).url).toBe('/play');
+    });
+
+    it('retries a failed daily as a daily', async () => {
+      daily.mockRejectedValueOnce(new Error('boom'));
+      const { harness, root } = await open('/play?daily=2026-10-21');
+      root.querySelector<HTMLButtonElement>('[role=alert] button')!.click();
+      await harness.fixture.whenStable();
+      expect(daily).toHaveBeenCalledTimes(2);
+      expect(generate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('hints', () => {
+    it('opens with the action bar, shows the step on the board and applies it', async () => {
+      const { harness, root, store } = await open('/play?difficulty=medium');
+      const hintButton = root.querySelectorAll<HTMLButtonElement>('app-action-bar button')[4];
+      expect(hintButton.disabled).toBe(false);
+      hintButton.click();
+      await harness.fixture.whenStable();
+      harness.detectChanges();
+
+      const { values, solution } = store.state();
+      expect(hint).toHaveBeenCalledWith(values, expect.objectContaining({ solution }));
+      const panel = root.querySelector('app-hint-panel')!;
+      expect(panel.querySelector('.explain')?.textContent).toBe(
+        '4 fits in only one cell in row 1: R1C3.',
+      );
+      expect(root.querySelector('[data-index="2"] .ghost')?.textContent).toBe('4');
+      expect(root.querySelector('.hint-unit')).not.toBeNull();
+
+      panel.querySelectorAll<HTMLButtonElement>('footer button')[1].click();
+      harness.detectChanges();
+      expect(store.cells()[2].value).toBe(4);
+      expect(store.hintsUsed()).toBe(1);
+      expect(root.querySelector('app-hint-panel')).toBeNull();
+      expect(root.querySelector('.ghost')).toBeNull();
+    });
+
+    it('opens with H, closes with Esc without pausing, and closes when the board changes', async () => {
+      const { harness, root, store, press } = await open('/play?difficulty=medium');
+      await press({ code: 'KeyH', key: 'h' });
+      harness.detectChanges();
+      expect(root.querySelector('app-hint-panel')).not.toBeNull();
+      await press({ key: 'Escape' });
+      harness.detectChanges();
+      expect(root.querySelector('app-hint-panel')).toBeNull();
+      expect(store.status()).toBe('playing');
+
+      await press({ code: 'KeyH', key: 'h' });
+      harness.detectChanges();
+      store.select(2);
+      await press({ code: 'Digit4', key: '4' });
+      harness.detectChanges();
+      expect(root.querySelector('app-hint-panel')).toBeNull();
+    });
+
+    it('ignores a hint that arrives after the panel was closed', async () => {
+      let resolve!: (step: Step) => void;
+      hint.mockReturnValue(new Promise((r) => (resolve = r)));
+      const { harness, root, press } = await open('/play?difficulty=medium');
+      await press({ code: 'KeyH', key: 'h' });
+      harness.detectChanges();
+      expect(root.querySelector('app-hint-panel [role=status]')).not.toBeNull();
+      root.querySelector<HTMLButtonElement>('app-hint-panel .close')!.click();
+      resolve(hiddenSingle);
+      await harness.fixture.whenStable();
+      harness.detectChanges();
+      expect(root.querySelector('app-hint-panel')).toBeNull();
+    });
+
+    it('tells the player when there is no hint or the engine fails', async () => {
+      hint.mockResolvedValueOnce(null).mockRejectedValueOnce(new Error('boom'));
+      const { harness, root, press } = await open('/play?difficulty=medium');
+      const toasts = TestBed.inject(ToastService);
+      await press({ code: 'KeyH', key: 'h' });
+      expect(toasts.toasts().at(-1)?.message).toContain('No hint available');
+      await press({ code: 'KeyH', key: 'h' });
+      await harness.fixture.whenStable();
+      expect(toasts.toasts().at(-1)?.message).toBe("Couldn't compute a hint. Try again.");
+      harness.detectChanges();
+      expect(root.querySelector('app-hint-panel')).toBeNull();
+    });
+
+    it('is disabled while paused', async () => {
+      const { harness, root, store, press } = await open('/play?difficulty=medium');
+      store.pause();
+      harness.detectChanges();
+      expect(root.querySelectorAll<HTMLButtonElement>('app-action-bar button')[4].disabled).toBe(
+        true,
+      );
+      await press({ code: 'KeyH', key: 'h' });
+      expect(hint).not.toHaveBeenCalled();
+    });
   });
 });

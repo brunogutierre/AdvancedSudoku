@@ -1,1 +1,22 @@
-{ "title": "Estadísticas" }
+{
+  "title": "Estadísticas",
+  "filter": { "label": "Dificultad", "all": "Todas" },
+  "kpi": {
+    "played": "Partidas jugadas",
+    "winRate": "Tasa de victorias",
+    "best": "Mejor tiempo",
+    "average": "Tiempo medio"
+  },
+  "none": "–",
+  "assistNote": "Los tiempos solo cuentan partidas resueltas sin pistas ni candidatos automáticos. Las partidas sin terminar cuentan como no ganadas.",
+  "streak": { "title": "Racha diaria", "current": "Actual", "longest": "Mejor" },
+  "chart": {
+    "title": "Partidas recientes",
+    "summary": "Tiempos de las últimas {{ count }} partidas ganadas, de la más antigua a la más reciente",
+    "game": "Partida",
+    "difficulty": "Dificultad",
+    "time": "Tiempo",
+    "assisted": "con ayuda"
+  },
+  "empty": { "text": "Aún no has resuelto ninguna partida.", "cta": "Jugar" }
+}
