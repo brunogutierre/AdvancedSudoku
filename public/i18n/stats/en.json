@@ -1,1 +1,22 @@
-{ "title": "Statistics" }
+{
+  "title": "Statistics",
+  "filter": { "label": "Difficulty", "all": "All" },
+  "kpi": {
+    "played": "Games played",
+    "winRate": "Win rate",
+    "best": "Best time",
+    "average": "Average time"
+  },
+  "none": "–",
+  "assistNote": "Times only count games solved without hints or auto-candidates. Unfinished games count as not won.",
+  "streak": { "title": "Daily streak", "current": "Current", "longest": "Best" },
+  "chart": {
+    "title": "Recent games",
+    "summary": "Solve times of the last {{ count }} games won, oldest first",
+    "game": "Game",
+    "difficulty": "Difficulty",
+    "time": "Time",
+    "assisted": "assisted"
+  },
+  "empty": { "text": "No solved games yet.", "cta": "Play a game" }
+}

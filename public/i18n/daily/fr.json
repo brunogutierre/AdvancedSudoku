@@ -1,1 +1,21 @@
-{ "title": "Défi quotidien" }
+{
+  "title": "Défi quotidien",
+  "streak": "Série : {{ count }}",
+  "week": {
+    "label": "Semaine",
+    "previous": "Semaine précédente",
+    "next": "Semaine suivante"
+  },
+  "state": {
+    "done": "résolu",
+    "missed": "manqué",
+    "today": "aujourd'hui",
+    "future": "pas encore disponible"
+  },
+  "play": "Jouer",
+  "continue": "Continuer",
+  "solvedIn": "Résolu en {{ time }}",
+  "missed": "Manqué. Seul le défi du jour peut être joué.",
+  "best": "Votre meilleur temps quotidien : {{ time }}",
+  "rotation": "Facile le lundi et le jeudi, Moyen le mardi et le vendredi, Difficile le mercredi et le week-end. Tout le monde reçoit la même grille chaque jour."
+}

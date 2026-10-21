@@ -1,0 +1,83 @@
+<section class="page daily">
+  <header class="head">
+    <div>
+      <p class="eyebrow">{{ 'daily.title' | transloco }}</p>
+      <h1 class="display month">{{ month() }}</h1>
+    </div>
+    <p class="streak" [class.active]="streak() > 0">
+      <app-icon name="flame" [size]="18" />
+      <span>{{ 'daily.streak' | transloco: { count: streak() } }}</span>
+    </p>
+  </header>
+
+  <nav class="week" [attr.aria-label]="'daily.week.label' | transloco">
+    <button
+      app-button
+      variant="icon"
+      type="button"
+      [disabled]="!canGoBack()"
+      [attr.aria-label]="'daily.week.previous' | transloco"
+      (click)="shiftWeek(-1)"
+    >
+      <app-icon name="chevron-left" [size]="20" />
+    </button>
+    <ol role="list">
+      @for (day of days(); track day.date) {
+        <li>
+          <button
+            type="button"
+            class="day"
+            [attr.data-state]="day.state"
+            [disabled]="day.state === 'future'"
+            [attr.aria-pressed]="day.date === selected()"
+            [attr.aria-current]="day.date === today ? 'date' : null"
+            [attr.aria-label]="day.label + ', ' + ('daily.state.' + day.state | transloco)"
+            (click)="selected.set(day.date)"
+          >
+            <span class="weekday" aria-hidden="true">{{ day.weekday }}</span>
+            <span class="num tnum" aria-hidden="true">{{ day.dayOfMonth }}</span>
+            <span class="mark" aria-hidden="true">
+              @if (day.state === 'done') {
+                <app-icon name="check" [size]="14" />
+              } @else if (day.state === 'missed') {
+                <span class="dot"></span>
+              }
+            </span>
+          </button>
+        </li>
+      }
+    </ol>
+    <button
+      app-button
+      variant="icon"
+      type="button"
+      [disabled]="weekOffset() === 0"
+      [attr.aria-label]="'daily.week.next' | transloco"
+      (click)="shiftWeek(1)"
+    >
+      <app-icon name="chevron-right" [size]="20" />
+    </button>
+  </nav>
+
+  <app-card class="day-card" [elevation]="2" [attr.data-difficulty]="selectedTier()">
+    <p class="eyebrow">{{ selectedLabel() }}</p>
+    <span class="chip">{{ 'difficulty.' + selectedTier() | transloco }}</span>
+    @if (selectedTime(); as time) {
+      <p class="solved">
+        <app-icon name="check" [size]="20" />
+        <span class="tnum">{{ 'daily.solvedIn' | transloco: { time } }}</span>
+      </p>
+    } @else if (selectedIsToday()) {
+      <a app-button routerLink="/play" [queryParams]="{ daily: today }" class="play">
+        {{ (inProgress() ? 'daily.continue' : 'daily.play') | transloco }}
+      </a>
+    } @else {
+      <p class="muted">{{ 'daily.missed' | transloco }}</p>
+    }
+    @if (bestTime(); as best) {
+      <p class="muted tnum">{{ 'daily.best' | transloco: { time: best } }}</p>
+    }
+  </app-card>
+
+  <p class="rotation muted">{{ 'daily.rotation' | transloco }}</p>
+</section>

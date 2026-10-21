@@ -1,1 +1,22 @@
-{ "title": "Statistiques" }
+{
+  "title": "Statistiques",
+  "filter": { "label": "Difficulté", "all": "Toutes" },
+  "kpi": {
+    "played": "Parties jouées",
+    "winRate": "Taux de victoire",
+    "best": "Meilleur temps",
+    "average": "Temps moyen"
+  },
+  "none": "–",
+  "assistNote": "Les temps ne comptent que les parties résolues sans indices ni candidats automatiques. Les parties inachevées comptent comme non gagnées.",
+  "streak": { "title": "Série quotidienne", "current": "Actuelle", "longest": "Record" },
+  "chart": {
+    "title": "Parties récentes",
+    "summary": "Temps des {{ count }} dernières parties gagnées, de la plus ancienne à la plus récente",
+    "game": "Partie",
+    "difficulty": "Difficulté",
+    "time": "Temps",
+    "assisted": "avec aide"
+  },
+  "empty": { "text": "Aucune partie résolue pour l'instant.", "cta": "Jouer une partie" }
+}

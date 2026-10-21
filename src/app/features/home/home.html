@@ -15,10 +15,35 @@
     />
   }
 
-  <section class="daily" aria-labelledby="daily-title">
+  <section class="daily" aria-labelledby="daily-title" [attr.data-difficulty]="dailyTier">
     <p class="eyebrow" id="daily-title">{{ 'home.daily.eyebrow' | transloco }}</p>
     <p class="display date">{{ todayShort() }}</p>
-    <a app-button routerLink="/daily">{{ 'home.daily.cta' | transloco }}</a>
+    <div class="daily-meta">
+      <span class="chip">{{ 'difficulty.' + dailyTier | transloco }}</span>
+      <span class="streak" [class.active]="streaks().current > 0">
+        <app-icon name="flame" [size]="18" />
+        {{ 'home.daily.streak' | transloco: { count: streaks().current } }}
+      </span>
+    </div>
+    @if (dailyDone(); as time) {
+      <p class="done tnum">
+        <app-icon name="check" [size]="18" />
+        {{ 'home.daily.done' | transloco: { time } }}
+      </p>
+    } @else {
+      <a app-button routerLink="/daily">{{ 'home.daily.cta' | transloco }}</a>
+    }
+  </section>
+
+  <section class="quick" [attr.aria-label]="'home.quick.label' | transloco">
+    <dl>
+      @for (item of quickStats(); track item.key) {
+        <div class="tile">
+          <dt>{{ 'home.quick.' + item.key | transloco }}</dt>
+          <dd class="tnum">{{ item.value ?? ('home.quick.none' | transloco) }}</dd>
+        </div>
+      }
+    </dl>
   </section>
 
   <section class="new-game" aria-labelledby="new-game-title">
@@ -60,7 +85,13 @@
               }
             </svg>
             <span class="name">{{ 'difficulty.' + difficulty | transloco }}</span>
-            <span class="best tnum">{{ 'home.noBest' | transloco }}</span>
+            <span class="best tnum">
+              @if (bestTimes()[difficulty]; as time) {
+                {{ 'home.best' | transloco: { time } }}
+              } @else {
+                {{ 'home.noBest' | transloco }}
+              }
+            </span>
           </a>
         </li>
       }

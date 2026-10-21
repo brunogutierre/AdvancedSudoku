@@ -1,0 +1,53 @@
+<section class="page stats">
+  <h1 class="display page-title">{{ 'stats.title' | transloco }}</h1>
+
+  <div class="filters" role="group" [attr.aria-label]="'stats.filter.label' | transloco">
+    @for (option of filters; track option) {
+      <button
+        type="button"
+        [attr.data-difficulty]="option"
+        [attr.aria-pressed]="filter() === option"
+        (click)="filter.set(option)"
+      >
+        {{ (option === 'all' ? 'stats.filter.all' : 'difficulty.' + option) | transloco }}
+      </button>
+    }
+  </div>
+
+  <dl class="kpis">
+    @for (kpi of kpis(); track kpi.key) {
+      <div class="kpi">
+        <dt>{{ 'stats.kpi.' + kpi.key | transloco }}</dt>
+        <dd class="tnum">{{ kpi.value ?? ('stats.none' | transloco) }}</dd>
+      </div>
+    }
+  </dl>
+  <p class="note">{{ 'stats.assistNote' | transloco }}</p>
+
+  <app-card class="streak">
+    <app-icon name="flame" [size]="28" />
+    <h2>{{ 'stats.streak.title' | transloco }}</h2>
+    <dl>
+      <div>
+        <dt>{{ 'stats.streak.current' | transloco }}</dt>
+        <dd class="tnum">{{ streaks().current }}</dd>
+      </div>
+      <div>
+        <dt>{{ 'stats.streak.longest' | transloco }}</dt>
+        <dd class="tnum">{{ streaks().longest }}</dd>
+      </div>
+    </dl>
+  </app-card>
+
+  <app-card class="chart">
+    <h2>{{ 'stats.chart.title' | transloco }}</h2>
+    @if (recent().length) {
+      <app-time-chart [records]="recent()" />
+    } @else {
+      <div class="empty">
+        <p>{{ 'stats.empty.text' | transloco }}</p>
+        <a app-button routerLink="/">{{ 'stats.empty.cta' | transloco }}</a>
+      </div>
+    }
+  </app-card>
+</section>

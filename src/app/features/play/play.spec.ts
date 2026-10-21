@@ -7,7 +7,7 @@ import playEn from '../../../../public/i18n/play/en.json';
 import hintsEn from '../../../../public/i18n/hints/en.json';
 import { ToastService } from '../../core/toast/toast.service';
 import type { Step } from '../../engine';
-import { APP_STORAGE, GameStore } from '../../core';
+import { APP_STORAGE, GameStore, StatsStore } from '../../core';
 import { MemoryStorage } from '../../core/testing/memory-storage';
 import type { GeneratedPuzzle } from '../../engine';
 import { KNOWN_PUZZLES } from '../../engine/testing/fixtures';
@@ -45,11 +45,13 @@ describe('Play', () => {
   let generate: ReturnType<typeof vi.fn>;
   let onWon: ReturnType<typeof vi.fn>;
   let hint: ReturnType<typeof vi.fn>;
+  let daily: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     generate = vi.fn().mockResolvedValue(generated);
     onWon = vi.fn();
     hint = vi.fn().mockResolvedValue(hiddenSingle);
+    daily = vi.fn().mockResolvedValue({ ...generated, tier: 'hard', seed: 'daily:v1:2026-10-21' });
     TestBed.configureTestingModule({
       providers: [
         provideTranslocoTesting({ 'play/en': playEn, 'hints/en': hintsEn }),
@@ -61,7 +63,7 @@ describe('Play', () => {
           withComponentInputBinding(),
         ),
         { provide: APP_STORAGE, useValue: new MemoryStorage() },
-        { provide: EngineClient, useValue: { generate, hint } },
+        { provide: EngineClient, useValue: { generate, hint, daily } },
         { provide: GAME_WON_HANDLERS, useValue: onWon, multi: true },
       ],
     });
@@ -229,6 +231,41 @@ describe('Play', () => {
     const { harness, store } = await open('/play?difficulty=medium');
     await harness.navigateByUrl('/');
     expect(store.status()).toBe('paused');
+  });
+
+  describe('daily', () => {
+    it('starts the daily puzzle of a date and records the start', async () => {
+      const { store } = await open('/play?daily=2026-10-21');
+      expect(daily).toHaveBeenCalledWith('2026-10-21');
+      expect(generate).not.toHaveBeenCalled();
+      expect(store.state()).toMatchObject({
+        mode: 'daily',
+        dailyDate: '2026-10-21',
+        difficulty: 'hard',
+        status: 'playing',
+      });
+      expect(TestBed.inject(StatsStore).data().perDifficulty.hard.started).toBe(1);
+      expect(TestBed.inject(Router).url).toBe('/play');
+    });
+
+    it("resumes today's unfinished daily instead of regenerating it", async () => {
+      const store = TestBed.inject(GameStore);
+      store.newGame({ ...generated, difficulty: 'hard', mode: 'daily', dailyDate: '2026-10-21' });
+      store.pause();
+      await open('/play?daily=2026-10-21');
+      expect(daily).not.toHaveBeenCalled();
+      expect(store.status()).toBe('playing');
+      expect(TestBed.inject(Router).url).toBe('/play');
+    });
+
+    it('retries a failed daily as a daily', async () => {
+      daily.mockRejectedValueOnce(new Error('boom'));
+      const { harness, root } = await open('/play?daily=2026-10-21');
+      root.querySelector<HTMLButtonElement>('[role=alert] button')!.click();
+      await harness.fixture.whenStable();
+      expect(daily).toHaveBeenCalledTimes(2);
+      expect(generate).not.toHaveBeenCalled();
+    });
   });
 
   describe('hints', () => {
