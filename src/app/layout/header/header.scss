@@ -1,0 +1,125 @@
+:host {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: block;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-2) var(--ease-out);
+}
+
+:host(.scrolled) {
+  border-bottom-color: var(--border);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  height: 56px;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--page-pad);
+}
+
+.start,
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--text);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+}
+
+.accent {
+  margin-inline-start: -0.3em;
+  color: var(--primary);
+  font-style: italic;
+  font-weight: var(--fw-semibold);
+}
+
+.logo {
+  display: grid;
+  grid-template-columns: repeat(3, 5px);
+  gap: 2px;
+
+  i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--text);
+
+    &:nth-child(5) {
+      background: var(--primary);
+    }
+  }
+}
+
+.tabs {
+  display: none;
+
+  ul {
+    display: flex;
+    gap: var(--sp-1);
+    margin: 0;
+  }
+
+  a {
+    position: relative;
+    display: block;
+    padding: var(--sp-2) var(--sp-3);
+    border-radius: var(--r-sm);
+    color: var(--text-muted);
+    font-weight: var(--fw-medium);
+    text-decoration: none;
+    transition: color var(--dur-2) var(--ease-out);
+
+    &:hover,
+    &[aria-current='page'] {
+      color: var(--text);
+    }
+  }
+}
+
+.indicator {
+  position: absolute;
+  inset-inline: var(--sp-3);
+  bottom: 0;
+  height: 2px;
+  border-radius: var(--r-full);
+  background: var(--primary);
+  view-transition-name: nav-indicator;
+}
+
+@media (width >= 600px) {
+  .bar {
+    height: 64px;
+  }
+}
+
+@media (width >= 900px) {
+  .tabs {
+    display: block;
+  }
+
+  .back {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .indicator,
+  .logo i {
+    background: CanvasText;
+  }
+}
