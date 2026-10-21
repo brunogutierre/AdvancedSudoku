@@ -1,6 +1,7 @@
 <div class="play">
   <section class="game" [attr.aria-busy]="loading()">
     <h1 class="visually-hidden">{{ 'play.title' | transloco }}</h1>
+    <p class="visually-hidden" aria-live="polite" aria-atomic="true">{{ announcement() }}</p>
     <app-play-toolbar
       [difficulty]="store.difficulty()"
       [elapsedMs]="store.elapsedMs()"
@@ -66,6 +67,8 @@
             [elapsedMs]="store.elapsedMs()"
             [mistakes]="store.mistakes()"
             [hintsUsed]="store.hintsUsed()"
+            [personalBest]="completionInfo().personalBest"
+            [dailyStreak]="completionInfo().dailyStreak"
             (newGame)="newGame()"
           />
         }

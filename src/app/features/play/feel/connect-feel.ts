@@ -6,6 +6,7 @@ import { SoundService } from '../../../core/feedback/sound.service';
 import { prefersReducedMotion } from '../../../core/theme/theme-transition';
 import type { Grid } from '../../../engine';
 import type { Board } from '../board/board';
+import { Announcement, announcementsFor } from './announce';
 import { diffBoard } from './board-events';
 
 /** Delay before the completion screen, so the diagonal win wave can play first. */
@@ -14,9 +15,13 @@ export const WIN_WAVE_MS = 700;
 /**
  * Turns board changes into sound, haptics and board animations. Call it in the Play
  * component's injection context; it reacts to GameStore only, so every input path
- * (keyboard, pad, picker, undo) gets the same feedback.
+ * (keyboard, pad, picker, undo) gets the same feedback. `announce` receives the screen
+ * reader messages for the same moves.
  */
-export function connectFeel(board: Signal<Board | undefined>): void {
+export function connectFeel(
+  board: Signal<Board | undefined>,
+  announce: (messages: readonly Announcement[]) => void = () => undefined,
+): void {
   const store = inject(GameStore);
   const sound = inject(SoundService);
   const haptics = inject(HapticsService);
@@ -37,7 +42,12 @@ export function connectFeel(board: Signal<Board | undefined>): void {
         }
       };
       if (sameGame && prevCells && (status === 'playing' || status === 'won')) {
-        for (const event of diffBoard(prevCells, cells)) {
+        const events = diffBoard(prevCells, cells);
+        const messages = announcementsFor(events, cells);
+        if (messages.length > 0) {
+          announce(messages);
+        }
+        for (const event of events) {
           switch (event.type) {
             case 'place':
               sound.play('place', event.digit);
@@ -70,6 +80,7 @@ export function connectFeel(board: Signal<Board | undefined>): void {
         }
       }
       if (sameGame && status === 'won' && prevStatus === 'playing') {
+        announce([{ key: 'play.live.won' }]);
         sound.play('win');
         haptics.vibrate('win');
         animate(

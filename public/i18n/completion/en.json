@@ -6,5 +6,7 @@
   "difficulty": "Difficulty",
   "newBest": "New best",
   "newGame": "New game",
-  "home": "Home"
+  "home": "Home",
+  "daily": "Daily challenge",
+  "streak": "{{ count }}-day streak"
 }

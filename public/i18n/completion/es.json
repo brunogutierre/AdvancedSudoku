@@ -6,5 +6,7 @@
   "difficulty": "Dificultad",
   "newBest": "Nuevo récord",
   "newGame": "Nueva partida",
-  "home": "Inicio"
+  "home": "Inicio",
+  "daily": "Desafío diario",
+  "streak": "Racha de {{ count }} días"
 }

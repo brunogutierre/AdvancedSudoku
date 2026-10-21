@@ -32,6 +32,21 @@
   font-weight: var(--fw-semibold);
 }
 
+.daily {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-1);
+}
+
+.streak {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  color: var(--flame);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+
 .headline {
   font-size: var(--fs-2xl);
 }

@@ -38,19 +38,17 @@ describe('TimeChart', () => {
     fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;
 
-    const bars = Array.from(root.querySelectorAll('rect'));
+    const bars = Array.from(root.querySelectorAll<HTMLElement>('.bar'));
     expect(bars.map((b) => b.getAttribute('data-difficulty'))).toEqual(['easy', 'easy', 'hard']);
     expect(bars[1].classList).toContain('assisted');
-    expect(Number(bars[2].getAttribute('height'))).toBeGreaterThan(
-      Number(bars[0].getAttribute('height')),
-    );
+    expect(bars.map((b) => b.style.height)).toEqual(['20%', '10%', '100%']);
     expect(root.querySelector('.best')?.textContent?.trim()).toBe('2:00');
-    expect(Array.from(root.querySelectorAll('.axis')).map((t) => t.textContent)).toEqual([
+    expect(Array.from(root.querySelectorAll('.axis')).map((t) => t.textContent?.trim())).toEqual([
       '3:20',
       '6:40',
       '10:00',
     ]);
-    expect(root.querySelector('svg')?.getAttribute('aria-label')).toBe(
+    expect(root.querySelector('[role=img]')?.getAttribute('aria-label')).toBe(
       'Solve times of the last 3 games won, oldest first',
     );
     const rows = Array.from(root.querySelectorAll('tbody tr')).map((r) =>
