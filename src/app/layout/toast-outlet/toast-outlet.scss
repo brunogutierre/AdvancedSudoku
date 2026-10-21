@@ -1,0 +1,66 @@
+:host {
+  position: fixed;
+  inset-inline: var(--sp-4);
+  bottom: calc(var(--toast-offset, 0px) + var(--sp-4) + env(safe-area-inset-bottom));
+  z-index: 50;
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-2);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: min(420px, 100%);
+  min-height: 48px;
+  padding: var(--sp-1) var(--sp-1) var(--sp-1) var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-3);
+  pointer-events: auto;
+  animation: enter var(--dur-3) var(--ease-out);
+}
+
+p {
+  flex: 1;
+  font-size: var(--fs-sm);
+}
+
+button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+
+  &:hover {
+    background: var(--surface-2);
+  }
+}
+
+.action {
+  padding: 0 var(--sp-3);
+  color: var(--primary);
+  font-weight: var(--fw-semibold);
+}
+
+.dismiss {
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@media (forced-colors: active) {
+  .toast {
+    border: 1px solid CanvasText;
+  }
+}

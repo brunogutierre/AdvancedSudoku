@@ -1,0 +1,37 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--sp-2);
+  inset-inline-start: var(--sp-2);
+  z-index: 100;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--r-sm);
+  background: var(--primary);
+  color: var(--on-primary);
+  font-weight: var(--fw-semibold);
+  transform: translateY(-200%);
+
+  &:focus {
+    transform: none;
+  }
+}
+
+main {
+  display: block;
+  outline: none;
+  view-transition-name: page;
+}
+
+@media (width < 900px) {
+  :host(.with-tab-bar) {
+    --toast-offset: var(--tabbar-h);
+
+    main {
+      padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom));
+    }
+  }
+}
