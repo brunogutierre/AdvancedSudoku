@@ -4,6 +4,7 @@ import { provideRouter, withComponentInputBinding, withViewTransitions } from '@
 
 import { routes } from './app.routes';
 import { provideI18n } from './core/i18n/provide-i18n';
+import { providePwa } from './core/pwa/provide-pwa';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,5 +16,6 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions({ skipInitialTransition: true }),
     ),
     provideI18n(),
+    providePwa(),
   ],
 };

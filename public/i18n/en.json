@@ -1,6 +1,10 @@
 {
-  "app": { "name": "Advanced Sudoku" },
-  "a11y": { "skipToContent": "Skip to content" },
+  "app": {
+    "name": "Advanced Sudoku"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content"
+  },
   "nav": {
     "label": "Main",
     "home": "Home",
@@ -16,9 +20,26 @@
     "light": "Light",
     "dark": "Dark"
   },
-  "language": { "label": "Language: {{ name }}" },
-  "difficulty": { "easy": "Easy", "medium": "Medium", "hard": "Hard", "insane": "Insane" },
-  "toast": { "dismiss": "Dismiss" },
-  "dialog": { "close": "Close" },
-  "common": { "loading": "Loading…" }
+  "language": {
+    "label": "Language: {{ name }}"
+  },
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard",
+    "insane": "Insane"
+  },
+  "toast": {
+    "dismiss": "Dismiss"
+  },
+  "dialog": {
+    "close": "Close"
+  },
+  "common": {
+    "loading": "Loading…"
+  },
+  "update": {
+    "available": "A new version is available.",
+    "reload": "Reload"
+  }
 }
