@@ -31,7 +31,8 @@
             ],
             "styles": [
               "src/styles.scss"
-            ]
+            ],
+            "webWorkerTsConfig": "tsconfig.worker.json"
           },
           "configurations": {
             "production": {
@@ -78,7 +79,8 @@
             ],
             "coverageExclude": [
               "src/**/*.spec.ts",
-              "src/app/app.config.ts"
+              "src/app/app.config.ts",
+              "src/**/*.worker.ts"
             ],
             "coverageReporters": [
               "text-summary",
