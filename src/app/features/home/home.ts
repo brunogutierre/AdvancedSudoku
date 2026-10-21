@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe, provideTranslocoScope } from '@jsverse/transloco';
-import { GameStore } from '../../core';
+import { GameStore, StatsStore, dailyStreaks, summarize } from '../../core';
+import { dailyTier } from '../../engine';
+import { formatDuration } from '../../shared/format/time';
+import { Icon } from '../../shared/ui/icon/icon';
+import { TODAY } from '../daily/week';
 import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
 import { ContinueCard } from './continue-card';
@@ -21,7 +25,7 @@ export function dayPart(hour: number): DayPart {
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, TranslocoPipe, Button, ContinueCard],
+  imports: [RouterLink, TranslocoPipe, Button, ContinueCard, Icon],
   providers: [provideTranslocoScope('home')],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.html',
@@ -31,6 +35,36 @@ export class Home {
   private readonly lang = inject(LanguageService).lang;
   private readonly now = new Date();
   private readonly game = inject(GameStore);
+  private readonly stats = inject(StatsStore);
+  private readonly todayDate = inject(TODAY);
+
+  protected readonly dailyTier = dailyTier(this.todayDate);
+  protected readonly streaks = computed(() =>
+    dailyStreaks(this.stats.data().dailyWins, this.todayDate),
+  );
+  /** Today's daily time when it is solved. */
+  protected readonly dailyDone = computed(() => {
+    const ms = this.stats.data().dailyWins[this.todayDate];
+    return ms === undefined ? null : formatDuration(ms);
+  });
+  /** Best unassisted time per difficulty card. */
+  protected readonly bestTimes = computed(() => {
+    const per = this.stats.data().perDifficulty;
+    return Object.fromEntries(
+      HOME_DIFFICULTIES.map((d) => {
+        const ms = per[d].bestMs;
+        return [d, ms === null ? null : formatDuration(ms)];
+      }),
+    ) as Record<HomeDifficulty, string | null>;
+  });
+  protected readonly quickStats = computed(() => {
+    const all = summarize(this.stats.data(), 'all');
+    return [
+      { key: 'won', value: String(all.won) },
+      { key: 'streak', value: String(this.streaks().longest) },
+      { key: 'average', value: all.averageMs === null ? null : formatDuration(all.averageMs) },
+    ];
+  });
 
   /** The unfinished saved game, if any. */
   protected readonly saved = computed(() => {
