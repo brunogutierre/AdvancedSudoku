@@ -1,1 +1,52 @@
-{ "title": "Settings" }
+{
+  "title": "Settings",
+  "sections": {
+    "gameplay": "Gameplay",
+    "assistance": "Assistance",
+    "feedback": "Feedback",
+    "appearance": "Appearance",
+    "language": "Language"
+  },
+  "mistakeMode": {
+    "label": "Mistakes",
+    "help": "Flag rule conflicts, check against the solution, or show nothing.",
+    "conflicts": "Conflicts",
+    "solution": "Solution",
+    "off": "Off"
+  },
+  "autoCandidates": {
+    "label": "Auto notes on Easy",
+    "help": "Start Easy games with every candidate pencilled in."
+  },
+  "highlightPeers": {
+    "label": "Highlight row, column and box",
+    "help": "Tint the cells that share a unit with the selection."
+  },
+  "highlightSameDigit": {
+    "label": "Highlight same digit",
+    "help": "Tint cells and notes with the selected digit."
+  },
+  "sound": {
+    "label": "Sound",
+    "help": "Soft synthesized sounds for moves and wins."
+  },
+  "haptics": {
+    "label": "Haptics",
+    "help": "Short vibrations on supported devices."
+  },
+  "reducedMotion": {
+    "label": "Reduce motion",
+    "help": "Replace animations with simple fades.",
+    "system": "System",
+    "on": "On",
+    "off": "Off"
+  },
+  "theme": {
+    "label": "Theme"
+  },
+  "language": {
+    "label": "Language",
+    "help": "Shown in each language’s own name."
+  },
+  "reset": "Restore defaults"
+}
