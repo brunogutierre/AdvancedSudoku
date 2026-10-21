@@ -14,6 +14,8 @@
   background: var(--line-box);
   box-shadow: var(--shadow-2);
   overflow: clip;
+  // Morphs with the Continue card's progress ring on Home (View Transitions).
+  view-transition-name: board;
 }
 
 .row {

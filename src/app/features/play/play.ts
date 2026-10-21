@@ -25,6 +25,7 @@ import { ActionBar, PlayAction } from './action-bar/action-bar';
 import { Board } from './board/board';
 import { navigate } from './board/board-nav';
 import { GAME_WON_HANDLERS } from './game-events';
+import { connectFeel } from './feel/connect-feel';
 import { NumberPad } from './number-pad/number-pad';
 import { PlayToolbar } from './play-toolbar/play-toolbar';
 import { RadialAnchor, RadialPicker } from './radial-picker/radial-picker';
@@ -86,6 +87,7 @@ export class Play implements OnInit {
   private request = 0;
 
   constructor() {
+    connectFeel(this.board);
     let previous = this.store.status();
     effect(() => {
       const status = this.store.status();

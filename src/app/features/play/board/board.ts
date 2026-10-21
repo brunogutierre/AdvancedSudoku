@@ -12,6 +12,7 @@ import { ALL_DIGITS, digitsOf, hasDigit } from '../../../engine';
 import type { CellIndex } from '../../../engine';
 import type { CellView } from '../../../core';
 import type { RadialAnchor } from '../radial-picker/radial-picker';
+import { MotionKind, animateCells } from './board-motion';
 
 /** Hold time that turns a press into a long-press (opens the radial picker). */
 export const LONG_PRESS_MS = 350;
@@ -75,12 +76,21 @@ export class Board {
 
   /** Moves DOM focus to a cell (keyboard navigation keeps focus and selection together). */
   focusCell(index: CellIndex): void {
-    this.host.nativeElement.querySelector<HTMLElement>(`[data-index="${index}"]`)?.focus();
+    this.cellElement(index)?.focus();
+  }
+
+  /** Plays a micro-animation on cells (callers check reduced motion). */
+  animate(kind: MotionKind, cells: readonly CellIndex[]): void {
+    animateCells((cell) => this.cellElement(cell), kind, cells);
+  }
+
+  private cellElement(index: CellIndex): HTMLElement | null {
+    return this.host.nativeElement.querySelector<HTMLElement>(`[data-index="${index}"]`);
   }
 
   /** Viewport geometry of a cell, to anchor the radial picker on it. */
   anchorOf(index: CellIndex, armed: boolean): RadialAnchor | null {
-    const el = this.host.nativeElement.querySelector<HTMLElement>(`[data-index="${index}"]`);
+    const el = this.cellElement(index);
     if (!el) {
       return null;
     }
