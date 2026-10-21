@@ -11,7 +11,7 @@
   display: grid;
   grid-template: repeat(3, 1fr) / repeat(3, 1fr);
   place-items: center;
-  height: 56px;
+  height: clamp(56px, 7dvh, 68px);
   min-width: 0;
   padding: 0;
   border: 0;
@@ -70,13 +70,13 @@
 
 @media (width >= 900px) {
   :host {
-    grid-template-columns: repeat(3, 72px);
-    justify-content: center;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--sp-2);
   }
 
   .key {
-    height: 72px;
+    height: auto;
+    aspect-ratio: 5 / 4;
     font-size: var(--fs-2xl);
   }
 }
