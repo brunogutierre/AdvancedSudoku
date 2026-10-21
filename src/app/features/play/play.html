@@ -28,7 +28,7 @@
       } @else if (failed()) {
         <div class="message" role="alert">
           <p>{{ 'play.error' | transloco }}</p>
-          <button app-button type="button" (click)="newGame()">
+          <button app-button type="button" (click)="retry()">
             {{ 'play.retry' | transloco }}
           </button>
         </div>

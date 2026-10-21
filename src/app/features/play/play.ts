@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService, provideTranslocoScope } from '@jsverse/transloco';
-import { GameStore, SettingsStore } from '../../core';
+import { GameStore, SettingsStore, StatsStore } from '../../core';
 import type { Difficulty } from '../../core';
 import { ToastService } from '../../core/toast/toast.service';
 import type { Step } from '../../engine';
@@ -38,12 +38,16 @@ function asDifficulty(value: string | undefined): Difficulty | null {
   return DIFFICULTIES.find((d) => d === value) ?? null;
 }
 
+/** A new random game of a tier, or the daily puzzle of a date. */
+type StartRequest = { readonly tier: Difficulty } | { readonly daily: string };
+
 /** Keys typed inside these keep their own meaning (header menus, form fields, dialogs). */
 const OWN_KEYS = '[role="menu"], input, textarea, select, dialog';
 
 /**
- * Play screen. `/play?difficulty=hard` starts a new game (the query param is then dropped so a
- * reload resumes instead of regenerating); `/play` resumes the saved game or starts one.
+ * Play screen. `/play?difficulty=hard` starts a new game and `/play?daily=2026-10-21` starts
+ * (or resumes) that day's puzzle; the query param is then dropped so a reload resumes instead
+ * of regenerating. `/play` resumes the saved game or starts one.
  */
 @Component({
   selector: 'app-play',
@@ -68,9 +72,12 @@ const OWN_KEYS = '[role="menu"], input, textarea, select, dialog';
 export class Play implements OnInit {
   /** Bound from the `difficulty` query param. */
   readonly difficulty = input<string>();
+  /** Bound from the `daily` query param ('YYYY-MM-DD'). */
+  readonly daily = input<string>();
 
   protected readonly store = inject(GameStore);
   protected readonly settings = inject(SettingsStore);
+  private readonly stats = inject(StatsStore);
   private readonly engine = inject(EngineClient);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -86,6 +93,7 @@ export class Play implements OnInit {
   protected readonly finalTime = computed(() => formatDuration(this.store.elapsedMs()));
   protected readonly boxes = Array.from({ length: 9 }, (_, i) => i);
   private request = 0;
+  private lastRequest: StartRequest = { tier: 'easy' };
 
   /** The hint panel is open; `hint` is null while the engine computes the step. */
   protected readonly hintOpen = signal(false);
@@ -118,18 +126,33 @@ export class Play implements OnInit {
 
   ngOnInit(): void {
     const requested = asDifficulty(this.difficulty());
+    const daily = this.daily();
     const status = this.store.status();
-    if (requested) {
-      void this.start(requested);
-    } else if (status === 'playing' || status === 'paused') {
+    const unfinished = status === 'playing' || status === 'paused';
+    if (daily && /^\d{4}-\d{2}-\d{2}$/.test(daily)) {
+      const state = this.store.state();
+      if (unfinished && state.mode === 'daily' && state.dailyDate === daily) {
+        this.store.resume();
+        this.dropQuery();
+      } else {
+        void this.start({ daily });
+      }
+    } else if (requested) {
+      void this.start({ tier: requested });
+    } else if (unfinished) {
       this.store.resume();
     } else {
-      void this.start(status === 'won' ? this.store.difficulty() : 'easy');
+      void this.start({ tier: status === 'won' ? this.store.difficulty() : 'easy' });
     }
   }
 
+  /** Retries the request that failed (a daily stays a daily). */
+  protected retry(): void {
+    void this.start(this.lastRequest);
+  }
+
   protected newGame(): void {
-    void this.start(this.store.difficulty());
+    void this.start({ tier: this.store.difficulty() });
   }
 
   protected togglePause(): void {
@@ -241,12 +264,16 @@ export class Play implements OnInit {
     }
   }
 
-  private async start(tier: Difficulty): Promise<void> {
+  private async start(request: StartRequest): Promise<void> {
     const id = ++this.request;
+    this.lastRequest = request;
     this.loading.set(true);
     this.failed.set(false);
     try {
-      const puzzle = await this.engine.generate(tier);
+      const puzzle =
+        'daily' in request
+          ? await this.engine.daily(request.daily)
+          : await this.engine.generate(request.tier);
       if (id !== this.request) {
         return;
       }
@@ -255,14 +282,10 @@ export class Play implements OnInit {
         solution: puzzle.solution,
         difficulty: puzzle.tier,
         seed: puzzle.seed,
+        ...('daily' in request ? { mode: 'daily', dailyDate: request.daily } : {}),
       });
-      if (this.difficulty()) {
-        void this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: {},
-          replaceUrl: true,
-        });
-      }
+      this.stats.recordStart(puzzle.tier);
+      this.dropQuery();
     } catch {
       if (id === this.request) {
         this.failed.set(true);
@@ -271,6 +294,12 @@ export class Play implements OnInit {
       if (id === this.request) {
         this.loading.set(false);
       }
+    }
+  }
+
+  private dropQuery(): void {
+    if (this.difficulty() || this.daily()) {
+      void this.router.navigate([], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
     }
   }
 }
