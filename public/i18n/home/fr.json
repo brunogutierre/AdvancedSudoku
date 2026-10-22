@@ -6,7 +6,6 @@
   },
   "subtitle": "Une grille, de la logique pure. Choisissez votre défi.",
   "newGame": "Nouvelle partie",
-  "newGameLabel": "Nouvelle partie {{ difficulty }}",
   "noBest": "Pas encore de meilleur temps",
   "daily": {
     "eyebrow": "Défi quotidien",

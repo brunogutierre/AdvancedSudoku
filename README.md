@@ -65,9 +65,18 @@ npm run test:ci        # unit tests with coverage
 npm run lint           # ESLint (angular-eslint, template accessibility rules)
 npm run format:check   # Prettier
 npm run build -- --base-href /AdvancedSudoku/
+npm run e2e            # Playwright end-to-end + axe accessibility tests (Chromium)
 ```
 
-CI runs lint, format check, tests and a production build on every pull request; every push to
+The end-to-end suite runs against the **production build** served under `/AdvancedSudoku/` by a
+tiny static server (`e2e/server.ts`), so the base href, service worker, engine worker chunk and
+puzzle bank are exercised from their real paths (including an offline reload). Games are made
+deterministic by seeding a saved game in `localStorage` before the app boots, or by reading the
+solution the app autosaves; no test hooks exist in production code. Run
+`npx playwright install chromium` once before the first run.
+
+CI runs lint, format check, tests, a production build and the end-to-end suite on every pull
+request; every push to
 `main` deploys to GitHub Pages (with a `404.html` copy of `index.html` so deep links work).
 
 ## License

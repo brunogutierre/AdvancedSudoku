@@ -17,7 +17,7 @@
           <i></i>
         }
       </span>
-      <span class="word">Advanced</span><span class="accent display">Sudoku</span>
+      <span class="word">Advanced</span>&ngsp;<span class="accent display">Sudoku</span>
     </a>
   </div>
 
@@ -38,7 +38,9 @@
 
   <div class="actions">
     <app-menu
-      [label]="'language.label' | transloco: { name: langLabel().name }"
+      [label]="
+        langLabel().short + ', ' + ('language.label' | transloco: { name: langLabel().name })
+      "
       [items]="langItems"
       [value]="lang()"
       (selected)="setLang($event)"

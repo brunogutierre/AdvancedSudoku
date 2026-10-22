@@ -6,7 +6,6 @@
   },
   "subtitle": "One puzzle, pure logic. Pick your challenge.",
   "newGame": "New game",
-  "newGameLabel": "New {{ difficulty }} game",
   "noBest": "No best time yet",
   "daily": {
     "eyebrow": "Daily challenge",

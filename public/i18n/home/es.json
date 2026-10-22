@@ -6,7 +6,6 @@
   },
   "subtitle": "Un rompecabezas, pura lógica. Elige tu desafío.",
   "newGame": "Nueva partida",
-  "newGameLabel": "Nueva partida {{ difficulty }}",
   "noBest": "Aún sin mejor tiempo",
   "daily": {
     "eyebrow": "Desafío diario",

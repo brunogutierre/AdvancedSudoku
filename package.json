@@ -12,7 +12,8 @@
     "lint": "ng lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "bank": "tsx scripts/generate-bank.ts"
+    "bank": "tsx scripts/generate-bank.ts",
+    "e2e": "tsc -p e2e/tsconfig.json && ng build --base-href /AdvancedSudoku/ && playwright test"
   },
   "private": true,
   "packageManager": "npm@11.17.0",
@@ -32,7 +33,9 @@
     "@angular/build": "^22.0.6",
     "@angular/cli": "^22.0.6",
     "@angular/compiler-cli": "^22.0.0",
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "~1.64.1",
     "@types/node": "^24.19.2",
     "@vitest/coverage-v8": "^4.1.12",
     "angular-eslint": "^22.6.0",
