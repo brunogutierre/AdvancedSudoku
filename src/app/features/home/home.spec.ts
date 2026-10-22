@@ -50,7 +50,8 @@ describe('Home', () => {
       '/play?difficulty=hard',
       '/play?difficulty=insane',
     ]);
-    expect(cards[3].getAttribute('aria-label')).toBe('New Insane game');
+    expect(cards[3].hasAttribute('aria-label')).toBe(false);
+    expect(cards[3].textContent).toMatch(/Insane\s*No best time yet/);
     expect(cards.map((c) => c.tabIndex)).toEqual([0, -1, -1, -1]);
   });
 

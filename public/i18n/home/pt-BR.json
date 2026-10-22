@@ -6,7 +6,6 @@
   },
   "subtitle": "Um quebra-cabeça, pura lógica. Escolha seu desafio.",
   "newGame": "Novo jogo",
-  "newGameLabel": "Novo jogo {{ difficulty }}",
   "noBest": "Sem melhor tempo ainda",
   "daily": {
     "eyebrow": "Desafio diário",

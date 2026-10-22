@@ -47,7 +47,10 @@ describe('Header', () => {
 
   it('renders the wordmark and marks the active nav tab', async () => {
     const { root } = await setup('/stats');
-    expect(root.querySelector('.wordmark')?.getAttribute('aria-label')).toBe('Advanced Sudoku');
+    const wordmark = root.querySelector('.wordmark');
+    // Label in name (WCAG 2.5.3): the visible words match the accessible name.
+    expect(wordmark?.getAttribute('aria-label')).toBe('Advanced Sudoku');
+    expect(wordmark?.textContent?.trim()).toBe('Advanced Sudoku');
     const current = root.querySelector('nav a[aria-current="page"]');
     expect(current?.textContent?.trim()).toBe('Stats');
     expect(current?.querySelector('.indicator')).not.toBeNull();
@@ -61,7 +64,7 @@ describe('Header', () => {
 
   it('switches the language from the menu with native names', async () => {
     const { fixture, langTrigger } = await setup();
-    expect(langTrigger.getAttribute('aria-label')).toBe('Language: English');
+    expect(langTrigger.getAttribute('aria-label')).toBe('EN, Language: English');
     expect(langTrigger.textContent).toContain('EN');
 
     await pick(fixture, langTrigger, 'Español');

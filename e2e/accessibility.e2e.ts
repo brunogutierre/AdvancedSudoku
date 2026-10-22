@@ -24,10 +24,6 @@ for (const colorScheme of ['light', 'dark'] as const) {
 
         const results = await new AxeBuilder({ page })
           .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-          // Experimental rule (WCAG 2.5.3): it flags abbreviated visible text such as "EN"
-          // for "Language: English" or "M 19" for "Monday, October 19", which name the
-          // same thing in full. Tracked as a follow-up instead of failing the suite.
-          .disableRules(['label-content-name-mismatch'])
           .analyze();
         expect(results.violations).toEqual([]);
       });

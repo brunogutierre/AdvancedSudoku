@@ -31,11 +31,13 @@
             [disabled]="day.state === 'future'"
             [attr.aria-pressed]="day.date === selected()"
             [attr.aria-current]="day.date === today ? 'date' : null"
-            [attr.aria-label]="day.label + ', ' + ('daily.state.' + day.state | transloco)"
             (click)="selected.set(day.date)"
           >
             <span class="weekday" aria-hidden="true">{{ day.weekday }}</span>
             <span class="num tnum" aria-hidden="true">{{ day.dayOfMonth }}</span>
+            <span class="visually-hidden"
+              >{{ day.label }}, {{ 'daily.state.' + day.state | transloco }}</span
+            >
             <span class="mark" aria-hidden="true">
               @if (day.state === 'done') {
                 <app-icon name="check" [size]="14" />

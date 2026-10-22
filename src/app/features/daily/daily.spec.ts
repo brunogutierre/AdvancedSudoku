@@ -46,7 +46,9 @@ describe('Daily', () => {
       'future',
     ]);
     expect(days()[2].getAttribute('aria-current')).toBe('date');
-    expect(days()[2].getAttribute('aria-label')).toBe('Wednesday, October 21, today');
+    expect(days()[2].querySelector('.visually-hidden')?.textContent).toBe(
+      'Wednesday, October 21, today',
+    );
     expect(days()[3].disabled).toBe(true);
     expect(card().querySelector('.chip')?.textContent).toBe('Hard');
     const play = card().querySelector<HTMLAnchorElement>('a.play')!;

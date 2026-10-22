@@ -3,7 +3,10 @@ import { savedGame, solve } from './support/game';
 
 test('a new Easy game from Home can be solved and counts in the stats', async ({ page }) => {
   await page.goto('./');
-  await page.getByRole('link', { name: 'New Easy game' }).click();
+  const easy = page.getByRole('link', { name: /^Easy/ });
+  // The accessible name is the visible text (WCAG 2.5.3 label in name).
+  await expect(easy).toHaveAccessibleName('Easy No best time yet');
+  await easy.click();
 
   await expect(page).toHaveURL(/\/AdvancedSudoku\/play$/);
   const board = page.getByRole('grid', { name: 'Sudoku board, Easy' });
