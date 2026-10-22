@@ -5,7 +5,7 @@ A modern Sudoku you can play in the browser, offline and in four languages, buil
 It is a rewrite of a 2021 study project ([sudoku](https://github.com/brunogutierre/sudoku)), a vanilla
 JavaScript game with HTML tables and a precomputed puzzle bank.
 
-> Work in progress. This README grows with every pull request.
+**Play it:** https://brunogutierre.github.io/AdvancedSudoku/ (installable, works offline).
 
 ## Goals
 
@@ -15,6 +15,101 @@ JavaScript game with HTML tables and a precomputed puzzle bank.
 - Daily challenge (same puzzle for everyone on the same date) and personal statistics.
 - Installable Progressive Web App that works offline, with subtle sound and haptics.
 - English, Brazilian Portuguese, Spanish and French, switchable at runtime.
+
+## Stack
+
+| Concern       | Choice                                                                                                                                |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework     | Angular 22: standalone components, zoneless change detection, signals, `input()`/`output()`, built-in control flow, OnPush everywhere |
+| Puzzle engine | Plain TypeScript (no Angular imports, enforced by ESLint and a test), running in a Web Worker                                         |
+| State         | Signal stores (`GameStore`, `SettingsStore`, `StatsStore`) persisted in versioned `localStorage` keys                                 |
+| i18n          | [Transloco](https://jsverse.gitbook.io/transloco) with one dictionary scope per feature (en, pt-BR, es, fr)                           |
+| Styling       | SCSS with CSS custom properties and `light-dark()`, no component library                                                              |
+| Feel          | Web Animations API, View Transitions, canvas confetti, Web Audio (synthesized), Vibration API                                         |
+| Offline       | `@angular/service-worker`, web app manifest, self-hosted fonts                                                                        |
+| Tests         | Vitest (unit, coverage gate 80%), Playwright + axe-core (end-to-end and accessibility)                                                |
+| Tooling       | ESLint (angular-eslint + template a11y rules), Prettier, GitHub Actions, GitHub Pages                                                 |
+
+## Architecture
+
+```
+src/app/
+├── engine/          # pure TS: grid model, peers, solver, techniques, grader, generator, daily, PRNG
+├── engine-worker/   # Web Worker + EngineClient (typed request/response protocol, timeout, fallback)
+├── core/            # GameStore (undo/redo), SettingsStore, StatsStore, persistence, theme, i18n, PWA, feedback
+├── features/
+│   ├── home/        # greeting, continue card, daily card, quick stats, difficulty cards
+│   ├── play/        # board, number pad, action bar, radial picker, hints, completion, feel, Konami
+│   ├── daily/       # week strip and today's puzzle
+│   ├── stats/       # per-difficulty KPIs, streaks, recent games chart
+│   └── settings/    # every preference
+├── layout/          # header, tab bar, language and theme menus
+└── shared/ui/       # icon, button, card, dialog, menu, switch, segmented control, skeleton
+public/puzzles/insane.json   # pre-generated insane bank (scripts/generate-bank.ts, fixed seed)
+```
+
+**Flow of a game:** the Play page asks `EngineClient` for a puzzle; the worker generates and grades
+it (or picks one from the insane bank); `GameStore.newGame` takes it from there. Every move is a
+command with before/after cell diffs, so undo/redo is exact and placing a digit plus clearing that
+digit from peer notes is one step. Board events derived from those diffs drive animation, sound,
+haptics and screen reader announcements from a single source.
+
+### Puzzle engine
+
+- **Model:** a `Uint8Array(81)` of values and a `Uint16Array(81)` of candidate bitmasks; rows,
+  columns, boxes and the 20 peers of each cell are precomputed tables.
+- **Solver:** bitmask backtracking on the most constrained cell; `countSolutions(grid, 2)` proves a
+  puzzle has exactly one solution.
+- **Grading by technique, not by guessing depth:** a logical solver always applies the cheapest
+  technique that makes progress, and the puzzle's difficulty is the hardest technique it needed.
+  Puzzles the ladder cannot finish are rejected, so a hint can always explain the next move.
+
+| Difficulty | Techniques it may need                                  |
+| ---------- | ------------------------------------------------------- |
+| Easy       | Full house, naked single, hidden single                 |
+| Medium     | + Pointing, box/line reduction, naked pair, hidden pair |
+| Hard       | + Naked triple, hidden triple, X-Wing                   |
+| Insane     | + Swordfish, XY-Wing                                    |
+
+- **Generator:** a seeded full grid, then clue removal in random order with 180° symmetry while the
+  solution stays unique, then grading; only puzzles whose grade matches the request are kept.
+  Easy and medium take milliseconds and hard a few hundred; insane puzzles are rare in random
+  generation, so they come from a 300-puzzle bank (9 kB gzipped) built offline with a fixed seed.
+- **Hints:** `nextStep()` returns data (technique, placements, eliminations, cells, units, digits
+  and a translation key), which the UI turns into board overlays and a sentence in the current
+  language. A wrong digit is pointed out before any technique.
+- **Daily challenge:** seeded by `daily:v1:YYYY-MM-DD`, so everyone gets the same puzzle on the
+  same date. Monday and Thursday are easy, Tuesday and Friday medium, Wednesday and the weekend
+  hard. Golden tests pin the puzzles of fixed dates so a release cannot change them by accident.
+- **Correctness:** besides vectors per technique, property tests check that no elimination ever
+  removes the solution digit and every placement equals the solution.
+
+### Design decisions
+
+| Decision                             | Why                                                                                                  |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| Engine in plain TypeScript           | Testable in isolation, reusable in a worker and in a Node script, no framework coupling              |
+| Generation in a Web Worker           | Hard puzzles can take up to a second; the UI never freezes                                           |
+| Grade by hardest technique           | Matches how people experience difficulty, and guarantees every hint is explainable                   |
+| Insane from a pre-generated bank     | Runtime generation of Swordfish/XY-Wing puzzles is unpredictable; a 9 kB bank is instant and offline |
+| Command pattern for moves            | Exact undo/redo, and one source of truth for feedback events                                         |
+| `localStorage` over IndexedDB        | Data is small (under 200 kB); a synchronous, validated, versioned store is simpler                   |
+| Transloco scopes per feature         | Lazy dictionaries and no merge conflicts between features                                            |
+| Synthesized sound                    | No audio assets to license or download; the audio context starts on the first gesture                |
+| Assisted games excluded from records | Hints, auto-candidates and the Konami combo keep best times honest                                   |
+| Updates never reload mid-game        | A service worker update waits until no game is being played                                          |
+| GitHub Pages                         | Static app, free hosting, deploys from the same repository on every merge                            |
+
+## Improvements over the 2021 version
+
+| 2021                                 | Now                                                                  |
+| ------------------------------------ | -------------------------------------------------------------------- |
+| 233 kB bank of puzzles               | Unlimited generated puzzles plus a 9 kB insane bank                  |
+| Difficulty by backtracking depth     | Difficulty by the techniques a person needs                          |
+| Notes shown on hover around the cell | 3×3 notes inside the cell and a radial picker for touch              |
+| Ctrl+Z only                          | Undo and redo for every action                                       |
+| Konami code fills singles            | Still there, now with a proper banner and sound                      |
+| No hints, no stats, Portuguese only  | Teaching hints, daily challenge, statistics, four languages, offline |
 
 ## Design
 
