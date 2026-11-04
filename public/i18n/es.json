@@ -1,6 +1,10 @@
 {
-  "app": { "name": "Advanced Sudoku" },
-  "a11y": { "skipToContent": "Saltar al contenido" },
+  "app": {
+    "name": "Advanced Sudoku"
+  },
+  "a11y": {
+    "skipToContent": "Saltar al contenido"
+  },
   "nav": {
     "label": "Principal",
     "home": "Inicio",
@@ -16,10 +20,32 @@
     "light": "Claro",
     "dark": "Oscuro"
   },
-  "language": { "label": "Idioma: {{ name }}" },
-  "difficulty": { "easy": "Fácil", "medium": "Medio", "hard": "Difícil", "insane": "Extremo" },
-  "toast": { "dismiss": "Descartar" },
-  "dialog": { "close": "Cerrar" },
-  "common": { "loading": "Cargando…" },
-  "update": { "available": "Hay una nueva versión disponible.", "reload": "Recargar" }
+  "language": {
+    "label": "Idioma: {{ name }}"
+  },
+  "difficulty": {
+    "easy": "Fácil",
+    "medium": "Medio",
+    "hard": "Difícil",
+    "insane": "Extremo"
+  },
+  "toast": {
+    "dismiss": "Descartar"
+  },
+  "dialog": {
+    "close": "Cerrar"
+  },
+  "common": {
+    "loading": "Cargando…"
+  },
+  "update": {
+    "available": "Hay una nueva versión disponible.",
+    "reload": "Recargar"
+  },
+  "appBanner": {
+    "label": "Sobre la app para Android",
+    "text": "Advanced Sudoku ya es una app para Android.",
+    "link": "Conoce la app",
+    "close": "Cerrar"
+  }
 }
