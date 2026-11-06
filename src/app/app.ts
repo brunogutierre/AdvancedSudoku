@@ -2,13 +2,14 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { injectCurrentPath } from './core/navigation/current-path';
+import { AppBanner } from './layout/app-banner/app-banner';
 import { Header } from './layout/header/header';
 import { TabBar } from './layout/tab-bar/tab-bar';
 import { ToastOutlet } from './layout/toast-outlet/toast-outlet';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TranslocoPipe, Header, TabBar, ToastOutlet],
+  imports: [RouterOutlet, TranslocoPipe, AppBanner, Header, TabBar, ToastOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '[class.with-tab-bar]': 'showTabBar()' },
   templateUrl: './app.html',

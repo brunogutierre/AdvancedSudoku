@@ -7,6 +7,10 @@ JavaScript game with HTML tables and a precomputed puzzle bank.
 
 **Play it:** https://brunogutierre.github.io/AdvancedSudoku/ (installable, works offline).
 
+**Now an Android app:** Advanced Sudoku grew into an app for Android, with rule variants, seasonal
+events, an Academy of techniques and more: https://altcozygames.com/sudoku. This web version stays
+online as it is, and a banner at the top of the page links to the app.
+
 ## Goals
 
 - Fluid gameplay with keyboard, mouse and touch, and a polished, minimalist look in light and dark themes.
